@@ -7,7 +7,7 @@ public class ServerConnect {
   public static void main(String[] args) throws IOException,
 			InterruptedException {
 		ServerSocket serverSocket = null;
-
+		//This is how we could change files 
 		try {
 			serverSocket = new ServerSocket(20001);
 		} catch (IOException e) {
@@ -28,7 +28,8 @@ public class ServerConnect {
 			threadPool[i].start();
 
 		}
-
+		
+		
 		for (int i = 0; i < players; i++)
 			threadPool[i].join();
 
