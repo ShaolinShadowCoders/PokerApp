@@ -4,7 +4,14 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.CallableStatement;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+
+import com.mysql.jdbc.Connection;
 
 
 //ATTEMP TO CHANGE
@@ -44,10 +51,14 @@ public class ServerConnect {
 		for(int i=0;i<players;i++){
 			String usernameString = cArray[i].getString();
 			String password = cArray[i].getString();
-			
+		}
+		
 		//While loop with function call to "checkUserName/Pass"
-			//check database
-				//Select password where username = ? 
+			boolean validUser = false;
+			while(validUser == false){
+				//check database
+				
+					//Select password where username = ? 
 			
 			//or create into database
 			
@@ -124,5 +135,57 @@ public class ServerConnect {
 		}
 		serverSocket.close();
 	}
+  
+  
+  
+  public static String idCheck(String username) {
+		try {
+			int name2;
+
+			Connection conn = getConnection();
+			String dpProcedure = "drop procedure if exists show_movies";
+
+			Statement st = conn.createStatement();
+			st.execute(dpProcedure);
+
+			String otProcedure = "create procedure idCheck() begin select chips from players where id="
+					+ id + "; end";
+
+			Statement st2 = conn.createStatement();
+			st2.execute(otProcedure);
+
+			CallableStatement cs = conn.prepareCall("{call show_movies()}");
+
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+
+				name2 = rs.getInt(1);
+				System.out.println(name2);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+  
+  
+  
+  
+  public static Connection getConnection() {
+		Connection con = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = (Connection) DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/testpoker", "root", "");
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		return con;
+	}
+  
+  
 }
 
