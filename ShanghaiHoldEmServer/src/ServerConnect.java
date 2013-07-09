@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import sun.security.util.Password;
+
 import com.mysql.jdbc.Connection;
 
 
@@ -51,7 +53,7 @@ public class ServerConnect {
 		for(int i=0;i<players;i++){
 			String usernameString = cArray[i].getString();
 			String password = cArray[i].getString();
-		}
+		
 		
 		//While loop with function call to "checkUserName/Pass"
 			boolean validUser = false;
@@ -59,32 +61,39 @@ public class ServerConnect {
 				//check database
 				
 					//Select password where username = ? 
-			
-			//or create into database
-			
-			//if successful, end loop
-			
-			//Create error (try catch) 
-				//send error message back to try again
-		//end loop for unsuccessful password
-			
-		//send message sending client to the next screen
-		//client[i].username = username
-		//client[i].password = password
+				if(password.compareTo(/*Database Return statement*/) == 0){
+					validUser = true;
+				cArray[i].sendString("Valid");
+				}
+				
+				else
+					cArray[i].sendString("Invalid");
+			}
+		}
+		
 		
 			
 			
 			
 		//make sure everyone joins the game
-		//for(int i = 0; i<players;i++){
-			//client[i].joinGame() /*join game is a function where it accepts "ready"
-		//}
+		for(int i = 0; i<players;i++){
+			 cArray[i].joinGame() /*join game is a function where it accepts "ready"*/
+		}
 		
-		//for (int i = 0; i < players; i++)
-		//	threadPool[i].join();
+		for (int i = 0; i < players; i++)
+			threadPool[i].join(20);
+		
+		
+		//move into a new array for the gameplay
+		
 		
 		//check the returned message for "ready" or "not ready" for each player
-		//move into a new array for the gameplay
+		for (int i = 0; i < players; i++){
+			if(cArray[i].status == true)
+				
+		}
+
+		
 		
 		//send message from server to each client in gameplay array to move onto the 
 		//next screen
