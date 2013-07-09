@@ -17,11 +17,11 @@ public class Main {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 		}
-		if (inputPass.compareTo(dbPass) == 0)
+//		if (inputPass.compareTo(dbPass) == 0)
 			System.out.println("It actually worked.");
-		else {
-			System.out.println("Password does not match");
-		}
+	//	else {
+		//	System.out.println("Password does not match");
+		//}
 
 	}
 
