@@ -1,20 +1,13 @@
 
-
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.CallableStatement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
-import sun.security.util.Password;
 
 import com.mysql.jdbc.Connection;
-//Attempt to change
+import com.mysql.jdbc.PreparedStatement;
 
 //ATTEMP TO CHANGE
 public class ServerConnect {
@@ -47,154 +40,175 @@ public class ServerConnect {
 		for (int i = 0; i < players; i++)
 			threadPool[i].join();
 		
+		
 		//code goes here
 		
-		//login
-		for(int i=0;i<players;i++){
-			String usernameString = cArray[i].getString();
-			String password = cArray[i].getString();
-		
-		
-		//While loop with function call to "checkUserName/Pass"
-			boolean validUser = false;
-			while(validUser == false){
-				//check database
+				//login
+				for(int i=0;i<players;i++){
+					
+					boolean validUser = false;
+					while(validUser == false){
+					
+					String usernameString = cArray[i].getString();
+					String password = cArray[i].getString();
 				
-					//Select password where username = ? 
-				if(password.compareTo(/*Database Return statement*/) == 0){
-					validUser = true;
-				cArray[i].sendString("Valid");
+					
+					//String inputPass = "abc456";
+					//String user = "Brian";
+					String dbPass = null;
+					try {
+						dbPass = idCheck(usernameString);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						System.out.println(e.getMessage());
+					}
+					if (password.compareTo(dbPass) == 0){
+						cArray[i].sendString("Valid");
+						validUser = true;
+					}
+					else {
+						cArray[i].sendString("Invalid");
+					}
+				
+				//While loop with function call to "checkUserName/Pass"
+					
+						//check database
+						
+							//Select password where username = ? 
+						/*if(password.compareTo(/*Database Return statement) == 0){
+							validUser = true;
+						}
+						
+						else*/
+					}
 				}
 				
-				else
-					cArray[i].sendString("Invalid");
-			}
-		}
-		
-		
-			
-			
-			
-		//make sure everyone joins the game
-		for(int i = 0; i<players;i++){
-			 cArray[i].joinGame() /*join game is a function where it accepts "ready"*/
-		}
-		
-		for (int i = 0; i < players; i++)
-			threadPool[i].join(20);
-		
-		
-		//move into a new array for the gameplay
-		
-		
-		//check the returned message for "ready" or "not ready" for each player
-		for (int i = 0; i < players; i++){
-			if(cArray[i].status == true)
 				
-		}
+					
+					
+					
+				//make sure everyone joins the game
+				for(int i = 0; i<players;i++)
+					 //cArray[i].joinGame() /*join game is a function where it accepts "ready"*/
+				
+				
+				for (int i1 = 0; i1 < players; i1++)
+					threadPool[i1].join(20);
+				
+				
+				//move into a new array for the gameplay
+				
+				
+				//check the returned message for "ready" or "not ready" for each player
+				for (int i = 0; i < players; i++)
+					if(cArray[i].status == true){
+						
+					}
+				
+				//send message from server to each client in gameplay array to move onto the 
+				//next screen
+				
+				////////////WHILE LOOP FOR GAMEPLAY///////////////////////////////////////////////////
+				
+					//Determine who's big/little blind
+						//int little blind
+						//int big blind
+					
+					//Random rand = new Random(); /*random card generator*/
+					
+					//initialize everyone's cards and send them out to the respective players
+						//array list of integers 0-51 to compose the deck//
+					//ArrayList<Integer> deck = new ArrayList<Integer>();
+						//for(int i1=0; i1<52 ; i1++)
+								//deck.add(i1);
+					
+						////Give everyone their cards/////
+							//int temp1; temp2;
+							//String[] cardsStrings = new String[gameplayers];
+							//for(i = 0; i<gamePlayers ; i ++){
+									// temp1= rand.nextInt() % deck.length;
+									//deck.remove(temp1);
+									// temp2= rand.nextInt() % deck.length;
+									//deck.remove(temp2);
+									//String cards[i] = "" + temp1 + " " + temp2;
+								//}
+						////betting////
+						////Send initial flop////
+						////betting////
 
-		
-		
-		//send message from server to each client in gameplay array to move onto the 
-		//next screen
-		
-		////////////WHILE LOOP FOR GAMEPLAY///////////////////////////////////////////////////
-		
-			//Determine who's big/little blind
-				//int little blind
-				//int big blind
-			
-			//Random rand = new Random(); /*random card generator*/
-			
-			//initialize everyone's cards and send them out to the respective players
-				//array list of integers 0-51 to compose the deck//
-			ArrayList<Integer> deck = new ArrayList<Integer>();
-				for(int i1=0; i1<52 ; i1++)
-						deck.add(i1);
-			
-				////Give everyone their cards/////
-					//int temp1; temp2;
-					//String[] cardsStrings = new String[gameplayers];
-					//for(i = 0; i<gamePlayers ; i ++){
-							// temp1= rand.nextInt() % deck.length;
-							//deck.remove(temp1);
-							// temp2= rand.nextInt() % deck.length;
-							//deck.remove(temp2);
-							//String cards[i] = "" + temp1 + " " + temp2;
-						//}
-				////betting////
-				////Send initial flop////
-				////betting////
-				
-				
-
-		}
-		
-		
-		System.out.printf("Blah blah blah\n");
+		/*System.out.printf("Blah blah blah\n");
 		String inputString = cArray[0].getString();
 		System.out.println(inputString);
 		cArray[1].sendString(inputString);
 		inputString = cArray[1].getString();
 		System.out.println(inputString);
 		cArray[0].sendString(inputString);
-		
+		/*inputString = cArray[0].getString();
+		System.out.println(inputString);
+		cArray[1].sendString(inputString);
+		inputString = cArray[1].getString();
+		System.out.println(inputString);
+		cArray[0].sendString(inputString);*/
+
 		for (int i = 0; i < players; i++) {
 			cArray[i].closeConnect();
 		}
 		serverSocket.close();
 	}
+
   
   
-  
-  public static String idCheck(String username) {
+  private static String idCheck(String username) throws SQLException {
+
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		String pass = null;
+		String selectSQL = "SELECT Password FROM Players WHERE Username = ?";
+
 		try {
-			int name2;
+			dbConnection = getConnection();
+			preparedStatement = (PreparedStatement) dbConnection
+					.prepareStatement(selectSQL);
+			preparedStatement.setString(1, username);
 
-			Connection conn = getConnection();
-			String dpProcedure = "drop procedure if exists show_movies";
-
-			Statement st = conn.createStatement();
-			st.execute(dpProcedure);
-
-			String otProcedure = "create procedure idCheck() begin select chips from players where id="
-					+ id + "; end";
-
-			Statement st2 = conn.createStatement();
-			st2.execute(otProcedure);
-
-			CallableStatement cs = conn.prepareCall("{call show_movies()}");
-
-			ResultSet rs = cs.executeQuery();
+			// execute select SQL statement
+			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 
-				name2 = rs.getInt(1);
-				System.out.println(name2);
+				pass = rs.getString("Password");
+				System.out.println("pass in DB : " + pass);
+
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 
-	}
-  
-  
-  
-  
-  public static Connection getConnection() {
-		Connection con = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = (Connection) DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/testpoker", "root", "");
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			ex.printStackTrace();
+			System.out.println(e.getMessage());
+
+		} finally {
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (dbConnection != null) {
+				dbConnection.close();
+			}
+			return pass;
 		}
-		return con;
 	}
-  
-  
+
+public static Connection getConnection() {
+	Connection con = null;
+	try {
+		Class.forName("com.mysql.jdbc.Driver");
+		con = (Connection) DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/testpoker", "root", "123");
+	} catch (SQLException ex) {
+		ex.printStackTrace();
+	} catch (ClassNotFoundException ex) {
+		ex.printStackTrace();
+	}
+	return con;
+}
 }
 
