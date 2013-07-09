@@ -67,7 +67,7 @@ public class Main {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = (Connection) DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/testpoker", "root", "");
+					"jdbc:mysql://localhost:3306/testpoker", "root", "123");
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		} catch (ClassNotFoundException ex) {
