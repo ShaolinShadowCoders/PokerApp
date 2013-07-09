@@ -68,42 +68,33 @@ public class ServerConnect {
 					}
 					else {
 						cArray[i].sendString("Invalid");
-					}
-				
-				//While loop with function call to "checkUserName/Pass"
-					
-						//check database
-						
-							//Select password where username = ? 
-						/*if(password.compareTo(/*Database Return statement) == 0){
-							validUser = true;
-						}
-						
-						else*/
+						validUser = false;
 					}
 				}
+				System.out.println("Worked!\n");
+			}
 				
 				
 					
 					
 					
 				//make sure everyone joins the game
-				for(int i = 0; i<players;i++)
+				//for(int i = 0; i<players;i++)
 					 //cArray[i].joinGame() /*join game is a function where it accepts "ready"*/
 				
 				
-				for (int i1 = 0; i1 < players; i1++)
-					threadPool[i1].join(20);
+				//for (int i1 = 0; i1 < players; i1++)
+					//threadPool[i1].join(20);
 				
 				
 				//move into a new array for the gameplay
 				
 				
 				//check the returned message for "ready" or "not ready" for each player
-				for (int i = 0; i < players; i++)
-					if(cArray[i].status == true){
+				//for (int i = 0; i < players; i++)
+					//if(cArray[i].status == true){
 						
-					}
+			//		}
 				
 				//send message from server to each client in gameplay array to move onto the 
 				//next screen
