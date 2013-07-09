@@ -1,26 +1,44 @@
 
 package com.manish.dialogbox;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class AlertDialogActivity extends Activity {
 
-       /** Called when the activity is first created. */
+	Socket echoSocket = null;
+    PrintWriter out = null;
+	BufferedReader in = null;
+	Handler handler = null;
+       
+	
+	/** Called when the activity is first created. */
        @Override
        public void onCreate(Bundle savedInstanceState) {
               super.onCreate(savedInstanceState);
               setContentView(R.layout.activity_main);
+              
+              
               Button btn = (Button) findViewById(R.id.button1);
               btn.setOnClickListener(new OnClickListener() {
 
@@ -56,11 +74,50 @@ public class AlertDialogActivity extends Activity {
                            switch (which) {
                            case DialogInterface.BUTTON_POSITIVE:
                                   // Yes button clicked
+                        	
+                        	boolean valid =false; 
+                        	while(valid == false){   
+                        	   Looper.prepare();
+                   			Test test = new Test();
+                   			test.doInBackground(null);
+                   			System.out.printf("Sending String from Client\n");
+                        	   
                         	   String username =  user.getText().toString();
+                        	   out.println(username);
                         	   String password = pass.getText().toString();
-                                  Toast.makeText(AlertDialogActivity.this, "Login Completed!",
-                                                Toast.LENGTH_LONG).show();
-                                  break;
+                        	   out.println(password);
+                        	   
+                        	String str = "";
+           					int k = 0;
+           					int count;
+           					char[] buf = new char[512];
+           					while (str.compareTo("") == 0) {
+           						System.out.println("Infinite loop?" + k);
+           						if ((count = in.read(buf)) != -1) { 
+           							str = String.valueOf(buf);
+           							System.out.println(str);
+           							if(str.compareTo("Valid")==0){
+           								valid = true;
+           								//move onto the next screen
+           							}
+           							else{
+           								//error message for alert\\
+           								new AlertDialog.Builder(this).setTitle("Error").setMessage("Wrong username/password").setNeutralButton("close",null).show();
+           								user = "";
+           								user.hint = "username";
+           								pass = "";
+           								pass.hint  = "password";
+           							}
+           							
+           							//content = str;
+           							//handler.post(runnableUi);
+           						}/*if statement*/
+           					}/*while loop*/
+                           	   Toast.makeText(AlertDialogActivity.this, "Login Completed!",
+                               Toast.LENGTH_LONG).show();
+                                  
+                                  
+                                  break;}
 
                            case DialogInterface.BUTTON_NEGATIVE:
                                   // No button clicked
@@ -68,10 +125,53 @@ public class AlertDialogActivity extends Activity {
                                   Toast.makeText(AlertDialogActivity.this, "Login Cancelled",
                                                 Toast.LENGTH_LONG).show();
                                   break;
-                           }
+                           }/*while loop for valid*/
                      }
               };
               builder.setPositiveButton("Login", dialogClickListener);
               builder.setNegativeButton("Cancel", dialogClickListener).show();
        }
+       
+       
+       private class Test extends AsyncTask<Void, Void, Void> {
+
+   		@Override
+   		protected Void doInBackground(Void... params) {
+
+   			try {
+   				System.out.printf("Made it here\n");
+   				echoSocket = new Socket("192.168.2.11", 20001);
+   				System.out.printf("Made it here2\n");
+   				out = new PrintWriter(echoSocket.getOutputStream(), true);
+   				in = new BufferedReader(new InputStreamReader(
+   						echoSocket.getInputStream()));
+   			} catch (UnknownHostException e) {
+   				System.err.println("Don't know about host machine .");
+   				System.exit(1);
+   			} catch (IOException e) {
+   				Log.e("tag", e.getMessage());
+   				System.exit(1);
+   			}
+   			return null;
+   		}
+
+   		@Override
+   		protected void onCancelled() {
+   			super.onCancelled();
+   		}
+
+   		@Override
+   		protected void onProgressUpdate(Void... values) {
+   			super.onProgressUpdate(values);
+   		}
+
+   		@Override
+   		protected void onPostExecute(Void result) {
+   			super.onPostExecute(result);
+   		}
+
+   	}  
+       
+       
+       
 }
