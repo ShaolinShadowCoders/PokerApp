@@ -16,10 +16,10 @@ public class Main {
 			dbPass = idCheck(user);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
-		if(inputPass.compareTo(dbPass)==0)
-				System.out.println("It actually worked.");
+		//if(inputPass.compareTo(dbPass)==0)
+			System.out.println("It actually worked.");
 		
 	}
 	private static String idCheck(String username) throws SQLException{
@@ -69,9 +69,9 @@ public class Main {
 			con = (Connection) DriverManager.getConnection(
 					"jdbc:mysql://localhost:3306/testpoker", "root", "123");
 		} catch (SQLException ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 		} catch (ClassNotFoundException ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 		}
 		return con;
 	}	
