@@ -14,7 +14,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -54,6 +53,7 @@ public class AlertDialogActivity extends Activity {
     	   
 
            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+           final android.app.AlertDialog.Builder show = new AlertDialog.Builder(this).setTitle("Error").setMessage("Wrong username/password").setNeutralButton("close",null);
            final EditText user = new EditText(this);
            user.setHint("Username");
            final EditText pass = new EditText(this);
@@ -77,7 +77,7 @@ public class AlertDialogActivity extends Activity {
                         	
                         	boolean valid =false; 
                         	while(valid == false){   
-                        	   Looper.prepare();
+                        	   //Looper.prepare();
                    			Test test = new Test();
                    			test.doInBackground(null);
                    			System.out.printf("Sending String from Client\n");
@@ -93,25 +93,26 @@ public class AlertDialogActivity extends Activity {
            					char[] buf = new char[512];
            					while (str.compareTo("") == 0) {
            						System.out.println("Infinite loop?" + k);
-           						if ((count = in.read(buf)) != -1) { 
-           							str = String.valueOf(buf);
-           							System.out.println(str);
-           							if(str.compareTo("Valid")==0){
-           								valid = true;
-           								//move onto the next screen
-           							}
-           							else{
-           								//error message for alert\\
-           								new AlertDialog.Builder(this).setTitle("Error").setMessage("Wrong username/password").setNeutralButton("close",null).show();
-           								user = "";
-           								user.hint = "username";
-           								pass = "";
-           								pass.hint  = "password";
-           							}
-           							
-           							//content = str;
-           							//handler.post(runnableUi);
-           						}/*if statement*/
+           						try {
+									if ((count = in.read(buf)) != -1) { 
+										str = String.valueOf(buf);
+										System.out.println(str);
+										if(str.compareTo("Valid")==0){
+											valid = true;
+											//move onto the next screen
+										}
+										else{
+											//error message for alert\\
+											show.show();
+										}
+										
+										//content = str;
+										//handler.post(runnableUi);
+									}
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}/*if statement*/
            					}/*while loop*/
                            	   Toast.makeText(AlertDialogActivity.this, "Login Completed!",
                                Toast.LENGTH_LONG).show();

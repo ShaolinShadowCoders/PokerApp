@@ -49,10 +49,13 @@ public class ServerHello implements Runnable {
 	}
 
 	public String getString() throws NumberFormatException, IOException {
-		char[] buffer = new char[1024];
+		String buffer = new String();
 		String ex = null;
-		
-		in.read(buffer);
+		int val =0;
+		while((val = in.read()) != '\n'){
+			char hold = (char) val;
+			buffer += hold;
+		}
 			ex = new String(buffer);
 			
 		

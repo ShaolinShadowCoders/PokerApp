@@ -22,7 +22,7 @@ public class ServerConnect {
 
 			System.exit(-1);
 		}
-		int players = 2;
+		int players = 1;
 		ServerHello[] cArray = new ServerHello[players];
 		Thread[] threadPool = new Thread[players];
 
@@ -193,7 +193,7 @@ public static Connection getConnection() {
 	try {
 		Class.forName("com.mysql.jdbc.Driver");
 		con = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/testpoker", "root", "123");
+				"jdbc:mysql://localhost:3306/testpoker", "root", "");
 	} catch (SQLException ex) {
 		ex.printStackTrace();
 	} catch (ClassNotFoundException ex) {
