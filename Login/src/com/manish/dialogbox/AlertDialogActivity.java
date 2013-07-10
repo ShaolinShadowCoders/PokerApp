@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -74,7 +75,7 @@ public class AlertDialogActivity extends Activity {
                            switch (which) {
                            case DialogInterface.BUTTON_POSITIVE:
                                   // Yes button clicked
-                        	
+                      	
                         	boolean valid =false; 
                         	while(valid == false){   
                         	   //Looper.prepare();
@@ -113,9 +114,18 @@ public class AlertDialogActivity extends Activity {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}/*if statement*/
-           					}/*while loop*/
-                           	   Toast.makeText(AlertDialogActivity.this, "Login Completed!",
-                               Toast.LENGTH_LONG).show();
+           					}  /*while loop*/
+      //     						if (valid == true){
+           							Toast.makeText(AlertDialogActivity.this, "Login Completed!",
+           							Toast.LENGTH_LONG).show();
+           							Intent i = new Intent();
+           							i.setClassName("com.manish.dialogbox", "com.manish.dialogbox.gamescreen");
+           							startActivity(i);
+      //                              setContentView(R.layout.gamescreen);
+        //   						} else {
+           							
+          // 						}
+                           	   
                                   
                                   
                                   break;}
