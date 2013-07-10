@@ -2,12 +2,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
+import java.util.ArrayList;
 
 //ATTEMP TO CHANGE
 public class ServerConnect {
@@ -40,64 +35,32 @@ public class ServerConnect {
 		for (int i = 0; i < players; i++)
 			threadPool[i].join();
 		
+		Login login = new Login();
+		for(int i=0;i<players;i++){
+			cArray[i] =((Login) login).validateUser(cArray[i]);
+		}
 		
-		//code goes here
-		
-				//login
-				for(int i=0;i<players;i++){
+		//make sure everyone joins the game
+		for(int i = 0; i<players;i++)
+			cArray[i].status= cArray[i].joinGame(); /*join game is a function where it accepts "ready"*/
 					
-					boolean validUser = false;
-					while(validUser == false){
+		for (int i1 = 0; i1 < players; i1++)
+			threadPool[i1].join(10);
+				
+				
+		ArrayList<ServerHello> gameplay = new ArrayList<ServerHello>();
+		//check if 
+		for(int i = 0; i<players;i++)
+			if(cArray[i].status == true)
+				gameplay.add(cArray[i]); //move into a new array for the gameplay
 					
-					String usernameString = cArray[i].getString();
-					String password = cArray[i].getString();
-				
-					
-					//String inputPass = "abc456";
-					//String user = "Brian";
-					String dbPass = null;
-					try {
-						dbPass = idCheck(usernameString);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						System.out.println(e.getMessage());
-					}
-					if (password.compareTo(dbPass) == 0){
-						cArray[i].sendString("Valid");
-						validUser = true;
-					}
-					else {
-						cArray[i].sendString("Invalid");
-						validUser = false;
-					}
-				}
-				System.out.println("Worked!\n");
-			}
+				players = gameplay.size();
 				
 				
-					
-					
-					
-				//make sure everyone joins the game
-				//for(int i = 0; i<players;i++)
-					 //cArray[i].joinGame() /*join game is a function where it accepts "ready"*/
-				
-				
-				//for (int i1 = 0; i1 < players; i1++)
-					//threadPool[i1].join(20);
-				
-				
-				//move into a new array for the gameplay
-				
-				
-				//check the returned message for "ready" or "not ready" for each player
-				//for (int i = 0; i < players; i++)
-					//if(cArray[i].status == true){
-						
-			//		}
 				
 				//send message from server to each client in gameplay array to move onto the 
-				//next screen
+				//next screen with cards 
+				
 				
 				////////////WHILE LOOP FOR GAMEPLAY///////////////////////////////////////////////////
 				
@@ -126,21 +89,6 @@ public class ServerConnect {
 						////betting////
 						////Send initial flop////
 						////betting////
-
-		/*System.out.printf("Blah blah blah\n");
-		String inputString = cArray[0].getString();
-		System.out.println(inputString);
-		cArray[1].sendString(inputString);
-		inputString = cArray[1].getString();
-		System.out.println(inputString);
-		cArray[0].sendString(inputString);
-		/*inputString = cArray[0].getString();
-		System.out.println(inputString);
-		cArray[1].sendString(inputString);
-		inputString = cArray[1].getString();
-		System.out.println(inputString);
-		cArray[0].sendString(inputString);*/
-
 		for (int i = 0; i < players; i++) {
 			cArray[i].closeConnect();
 		}
@@ -149,57 +97,6 @@ public class ServerConnect {
 
   
   
-  private static String idCheck(String username) throws SQLException {
-
-		Connection dbConnection = null;
-		PreparedStatement preparedStatement = null;
-		String pass = null;
-		String selectSQL = "SELECT Password FROM Players WHERE Username = ?";
-
-		try {
-			dbConnection = getConnection();
-			preparedStatement = (PreparedStatement) dbConnection
-					.prepareStatement(selectSQL);
-			preparedStatement.setString(1, username);
-
-			// execute select SQL statement
-			ResultSet rs = preparedStatement.executeQuery();
-
-			while (rs.next()) {
-
-				pass = rs.getString("Password");
-				System.out.println("pass in DB : " + pass);
-
-			}
-		} catch (SQLException e) {
-
-			System.out.println(e.getMessage());
-
-		} finally {
-
-			if (preparedStatement != null) {
-				preparedStatement.close();
-			}
-
-			if (dbConnection != null) {
-				dbConnection.close();
-			}
-			return pass;
-		}
-	}
-
-public static Connection getConnection() {
-	Connection con = null;
-	try {
-		Class.forName("com.mysql.jdbc.Driver");
-		con = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/testpoker", "root", "");
-	} catch (SQLException ex) {
-		ex.printStackTrace();
-	} catch (ClassNotFoundException ex) {
-		ex.printStackTrace();
-	}
-	return con;
-}
+  
 }
 

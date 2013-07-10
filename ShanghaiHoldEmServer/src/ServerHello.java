@@ -26,7 +26,15 @@ public class ServerHello implements Runnable {
 	BufferedReader in;
 	Boolean connect = false;
 	
+	//player values
 	Boolean status = false;
+	String username = "";
+	String password = "";
+	int chips = 500;
+	
+	
+	
+	
 	public void run() {
 		System.out.println("Started from the bottom now we're here");
 		try {
@@ -65,6 +73,16 @@ public class ServerHello implements Runnable {
 
 	public void sendString(String ex) {
 		out.println(ex);
+	}
+	
+	public Boolean joinGame() throws NumberFormatException, IOException{
+			String clientResponse =this.getString();
+			if(clientResponse.compareTo("True") == 0 ){
+				return true;
+			}else return false;
+			
+	
+		
 	}
 	
 	public static Connection getConnection() {
