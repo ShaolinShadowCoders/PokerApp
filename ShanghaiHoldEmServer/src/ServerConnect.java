@@ -52,8 +52,8 @@ public class ServerConnect {
 		//check if 
 		for(int i = 0; i<players;i++)
 			if(cArray[i].status == true)
+				
 				gameplay.add(cArray[i]); //move into a new array for the gameplay
-					
 				players = gameplay.size();
 				
 				
@@ -68,7 +68,6 @@ public class ServerConnect {
 						//int little blind
 						//int big blind
 					
-					//Random rand = new Random(); /*random card generator*/
 					
 					//initialize everyone's cards and send them out to the respective players
 						//array list of integers 0-51 to compose the deck//
