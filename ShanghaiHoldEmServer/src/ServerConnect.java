@@ -28,7 +28,6 @@ public class ServerConnect {
 			cArray[i] = new ServerHello(clientServer);
 			threadPool[i] = new Thread(cArray[i]);
 			threadPool[i].start();
-
 		}
 		
 		
