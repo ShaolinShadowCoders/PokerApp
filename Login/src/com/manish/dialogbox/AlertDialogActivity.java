@@ -38,24 +38,25 @@ public class AlertDialogActivity extends Activity {
 
 	public void alertMessage() {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		final android.app.AlertDialog.Builder show = new AlertDialog.Builder(
 				this).setTitle("Error").setMessage("Wrong username/password")
 				.setNeutralButton("close", null);
-		final EditText user = new EditText(this);
-		user.setHint("Username");
-		final EditText pass = new EditText(this);
-		pass.setHint("Password");
-		pass.setInputType(InputType.TYPE_CLASS_TEXT
-				| InputType.TYPE_TEXT_VARIATION_PASSWORD);
-		builder.setMessage("Please enter username and password!");
-		LinearLayout login = new LinearLayout(this);
-		login.setOrientation(LinearLayout.VERTICAL);
-		login.addView(user);
-		login.addView(pass);
-		builder.setView(login);
-		// builder.setView(user);
-		// builder.setView(pass);
+//		final EditText user = new EditText(this);
+		final EditText user = null;
+//		user.setHint("Username");
+//		final EditText pass = new EditText(this);
+		final EditText pass = null;
+//		pass.setHint("Password");
+//		pass.setInputType(InputType.TYPE_CLASS_TEXT
+//				| InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//		builder.setMessage("Please enter username and password!");
+//		final LinearLayout login = new LinearLayout(this);
+//		login.setOrientation(LinearLayout.VERTICAL);
+//		login.addView(user);
+//		login.addView(pass);
+//		builder.setView(login);
+		message(builder, user, pass);/*new*/
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
@@ -64,8 +65,6 @@ public class AlertDialogActivity extends Activity {
 				case DialogInterface.BUTTON_POSITIVE:
 					// Yes button clicked
 
-					//Test test = new Test();
-					//test.doInBackground();
 					ServerIO server = new ServerIO();
 					server.con();
 					
@@ -93,8 +92,11 @@ public class AlertDialogActivity extends Activity {
 									if (str.compareTo("Valid\r") == 0) {
 										valid = true;
 										// move onto the next screen
-									} else 
+									} else {
 										show.show();
+					/*new*/					message(builder, user, pass);
+	//									builder.show();
+									}
 								
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
@@ -124,7 +126,20 @@ public class AlertDialogActivity extends Activity {
 		builder.setPositiveButton("Login", dialogClickListener);
 		builder.setNegativeButton("Cancel", dialogClickListener).show();
 	}
-
-	
+/*NEW*/
+	public void message(AlertDialog.Builder builder, EditText user, EditText pass ){
+		user = new EditText(this);
+		user.setHint("Username");
+		pass = new EditText(this);
+		pass.setHint("Password");
+		pass.setInputType(InputType.TYPE_CLASS_TEXT
+				| InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		builder.setMessage("Please enter username and password!");
+		final LinearLayout login = new LinearLayout(this);
+		login.setOrientation(LinearLayout.VERTICAL);
+		login.addView(user);
+		login.addView(pass);
+		builder.setView(login);
+	}
 
 }
