@@ -39,7 +39,7 @@ public class AlertDialogActivity extends Activity {
               setContentView(R.layout.activity_main);
               
               
-              Button btn = (Button) findViewById(R.id.button1);
+              Button btn = (Button) findViewById(R.id.startBtn);
               btn.setOnClickListener(new OnClickListener() {
 
                      @Override
@@ -80,52 +80,48 @@ public class AlertDialogActivity extends Activity {
                         	while(valid == false){   
                         	   //Looper.prepare();
                    			Test test = new Test();
-                   			test.doInBackground(null);
+ //                  			test.doInBackground(null);
                    			System.out.printf("Sending String from Client\n");
                         	   
-                        	   String username =  user.getText().toString();
-                        	   out.println(username);
-                        	   String password = pass.getText().toString();
-                        	   out.println(password);
+  //                      	   String username =  user.getText().toString();
+  //                      	   out.println(username);
+  //                      	   String password = pass.getText().toString();
+  //                      	   out.println(password);
                         	   
-                        	String str = "";
-           					int k = 0;
-           					int count;
-           					char[] buf = new char[512];
-           					while (str.compareTo("") == 0) {
-           						System.out.println("Infinite loop?" + k);
-           						try {
-									if ((count = in.read(buf)) != -1) { 
-										str = String.valueOf(buf);
-										System.out.println(str);
-										if(str.compareTo("Valid")==0){
-											valid = true;
+ //                       	String str = "";
+ //          					int k = 0;
+          // 					int count;
+         //  					char[] buf = new char[512];
+       //    					while (str.compareTo("") == 0) {
+        //   						System.out.println("Infinite loop?" + k);
+        //   						try {
+				//					if ((count = in.read(buf)) != -1) { 
+		//								str = String.valueOf(buf);
+		//								System.out.println(str);
+							//			if(str.compareTo("Valid")==0){
+		//									valid = true;
 											//move onto the next screen
-										}
-										else{
+							//			}
+//										else{
 											//error message for alert\\
-											show.show();
-										}
+	//										show.show();
+	//							}
 										
 										//content = str;
 										//handler.post(runnableUi);
-									}
-								} catch (IOException e) {
+				//					}
+		//						} catch (IOException e) {
 									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}/*if statement*/
-           					}  /*while loop*/
+			//						e.printStackTrace();
+	//							}/*if statement*/
+        //   					}  /*while loop*/
       //     						if (valid == true){
            							Toast.makeText(AlertDialogActivity.this, "Login Completed!",
            							Toast.LENGTH_LONG).show();
            							Intent i = new Intent();
-           							i.setClassName("com.manish.dialogbox", "com.manish.dialogbox.gamescreen");
+           							i.setClassName("com.manish.dialogbox", "com.manish.dialogbox.readyscreen");
            							startActivity(i);
-      //                              setContentView(R.layout.gamescreen);
-        //   						} else {
-           							
-          // 						}
-                           	   
+
                                   
                                   
                                   break;}
@@ -133,8 +129,6 @@ public class AlertDialogActivity extends Activity {
                            case DialogInterface.BUTTON_NEGATIVE:
                                   // No button clicked
                                   // do nothing
-                                  Toast.makeText(AlertDialogActivity.this, "Login Cancelled",
-                                                Toast.LENGTH_LONG).show();
                                   break;
                            }/*while loop for valid*/
                      }
