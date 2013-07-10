@@ -28,8 +28,8 @@ public class ServerHello implements Runnable {
 	
 	//player values
 	Boolean status = false;
-	String username = null;
-	String password = null;
+	String username = "";
+	String password = "";
 	int chips = 500;
 	
 	
