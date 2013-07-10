@@ -6,10 +6,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
-import com.mysql.jdbc.Connection;
 
 
 public class ServerHello implements Runnable {
@@ -79,24 +75,8 @@ public class ServerHello implements Runnable {
 			String clientResponse =this.getString();
 			if(clientResponse.compareTo("True") == 0 ){
 				return true;
-			}else return false;
-			
-	
-		
-	}
-	
-	public static Connection getConnection() {
-		Connection con = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = (Connection) DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/testpoker", "root", "");
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			ex.printStackTrace();
-		}
-		return con;
+			}else return false;	
 	}
 
+	
 }
