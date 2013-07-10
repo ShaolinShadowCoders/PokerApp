@@ -2,7 +2,6 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 //ATTEMP TO CHANGE
 public class ServerConnect {
@@ -48,13 +47,13 @@ public class ServerConnect {
 			threadPool[i1].join(10);
 				
 				
-		ArrayList<ServerHello> gameplay = new ArrayList<ServerHello>();
+		/*ArrayList<ServerHello> gameplay = new ArrayList<ServerHello>();
 		//check if 
 		for(int i = 0; i<players;i++)
 			if(cArray[i].status == true)
 				
 				gameplay.add(cArray[i]); //move into a new array for the gameplay
-				players = gameplay.size();
+				players = gameplay.size();*/
 				
 				
 				
