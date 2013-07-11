@@ -13,9 +13,7 @@ public class Hand {
 	
 	public void startHand(){
 		Dealer dealer = new Dealer();
-		
-		
-		//dealer.createDeck;
+		dealer.createDeck();
 		
 		for(int i=0;i<players;i++){
 			int card1 = dealer.card(dealer.deck);
