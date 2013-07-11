@@ -1,7 +1,5 @@
 package com.manish.dialogbox;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -81,25 +79,13 @@ public class AlertDialogActivity extends Activity {
 						server.out.println(password);
 
 						String str = "";
-						String buf = "";
-							try {
-								int val;
-								while((val = server.in.read()) != '\n'){
-									char hold = (char) val;
-									buf += hold;
-								}
-									str = String.valueOf(buf);
-									System.out.println(str);
-									if (str.compareTo("Valid\r") == 0) {
-										valid = true;
-										// move onto the next screen
-									} else 
-										show.show();
-								
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+						str = server.getMessage();
+						
+						if (str.compareTo("Valid\r") == 0) {
+							valid = true;
+							// move onto the next screen
+						} else 
+							show.show();
 						
 							if (valid == true) {
 							Toast.makeText(AlertDialogActivity.this,

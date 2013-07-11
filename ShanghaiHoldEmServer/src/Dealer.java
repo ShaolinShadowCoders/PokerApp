@@ -27,6 +27,20 @@ public class Dealer {
 		return card; 
 	}
 	
+	public void deal(int players){
+		for(int i=0;i<players;i++){
+			
+		}
+			
+	}
+	
+	public void blinds(ArrayList<ServerHello> gameplay,int smallBlind,int bigBlind){
+		
+		gameplay.get(smallBlind++).sendString("small");
+		gameplay.get(bigBlind++).sendString("big");
+		
+	}
+	
 	
 	
 	
