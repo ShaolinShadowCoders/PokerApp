@@ -72,6 +72,13 @@ public class NioServer {
 
 	public void loginService() {
 		Boolean flag = true;
+		final Timer timer = new Timer();
+		TimerTask task = new TimerTask(){
+			public void run(){
+				flag = false;
+			}
+		};
+		timer.schedule(task, 60*1000);
 		while (flag == true) {
 			synchronized (gate) {
 			}
