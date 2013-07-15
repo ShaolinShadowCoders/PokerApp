@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -27,16 +28,14 @@ public class Dealer {
 		return card; 
 	}
 	
-	public void deal(int players){
-		for(int i=0;i<players;i++){
-			
-		}
-			
-	}
 	
-	public void blinds(ArrayList<ServerHello> gameplay,int smallBlind,int bigBlind){
-		
+	public void blinds(ArrayList<ServerHello> gameplay,int smallBlind,int bigBlind) throws SQLException{
+		DB smallblindDb = new DB(gameplay.get(smallBlind));
+		smallblindDb.blindUpdate(gameplay.get(smallBlind).username, 0);
 		gameplay.get(smallBlind++).sendString("small");
+		
+		DB bigblindDb = new DB(gameplay.get(bigBlind));
+		bigblindDb.blindUpdate(gameplay.get(bigBlind).username, 0);
 		gameplay.get(bigBlind++).sendString("big");
 		
 	}

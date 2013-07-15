@@ -3,6 +3,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.mysql.jdbc.Connection;
+
 public class DB {
 
 	ServerHello client;
@@ -50,11 +52,10 @@ public class DB {
 		}
 	}
 
-	String blindUpdate(String username, int bigSmall) throws SQLException {
+	void blindUpdate(String username, int bigSmall) throws SQLException {
 
 		Connection dbConnection = null;
 		java.sql.PreparedStatement preparedStatement = null;
-		String pass = null;
 		String updateTableSQL = "UPDATE Players SET Chips = Chips - ? "
 				+ " WHERE Username = ?";
 		int change = 0;
@@ -64,7 +65,7 @@ public class DB {
 			change = 10;
 
 		try {
-			dbConnection = getDBConnection();
+			dbConnection = getConnection();
 			preparedStatement = (PreparedStatement) dbConnection
 					.prepareStatement(updateTableSQL);
 
@@ -84,7 +85,6 @@ public class DB {
 			if (dbConnection != null) {
 				dbConnection.close();
 			}
-			return pass;
 		}
 	}
 

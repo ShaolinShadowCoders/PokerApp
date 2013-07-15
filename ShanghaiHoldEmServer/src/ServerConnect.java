@@ -58,6 +58,8 @@ public class ServerConnect {
 				gameplay.add(cArray[i]); //move into a new array for the gameplay
 				
 				players = gameplay.size();
+				smallblind %= players;
+				bigBlind %= players;
 				
 				
 				
@@ -65,8 +67,8 @@ public class ServerConnect {
 				for(int i=0; i<players;i++)
 					gameplay.get(i).sendString("Welcome");
 				//next screen with cards 
-				Hand hand = new Hand(players, gameplay);
-				hand.startHand();
+				Hand hand = new Hand(players, gameplay,smallblind,bigBlind);
+				//hand.startHand();
 				
 				////////////WHILE LOOP FOR GAMEPLAY///////////////////////////////////////////////////
 				
