@@ -70,8 +70,9 @@ public class NioServer {
 		}
 	}
 
-	public void service() {
-		while (true) {
+	public void loginService() {
+		Boolean flag = true;
+		while (flag == true) {
 			synchronized (gate) {
 			}
 			try {
@@ -82,7 +83,7 @@ public class NioServer {
 				for (SelectionKey key : selectionKeys) {
 					try {
 						if (key.isReadable()) {
-							handle_receive(key);
+							handle_receive_login(key);
 						}
 					} catch (Exception e) {
 						// TODO: handle exception
@@ -103,7 +104,41 @@ public class NioServer {
 		}
 	}
 
-	public void handle_receive(SelectionKey key) {
+	public void gameService() {
+		Boolean flag = true;
+		while (flag == true) {
+			synchronized (gate) {
+			}
+			try {
+				int n = selector.select();
+				if (n == 0)
+					continue;
+				Set<SelectionKey> selectionKeys = selector.selectedKeys();
+				for (SelectionKey key : selectionKeys) {
+					try {
+						if (key.isReadable()) {
+							handle_receive_gameplay(key);
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+						try {
+							if (key != null) {
+								key.cancel();
+								key.channel().close();
+							}
+						} catch (Exception ex) {
+							e.printStackTrace();
+						}
+					}
+				}
+				selectionKeys.clear();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void handle_receive_login(SelectionKey key) {
 		SocketChannel socketChannel = null;
 		GamePlayer message = null;
 		GamePlayer sendMessage = new GamePlayer();
@@ -131,7 +166,37 @@ public class NioServer {
 					sBuffer.put(sendMessage.Message2Byte());
 					sBuffer.flip();
 					socketChannel.write(sBuffer);
-				} else if (message.getStr().equals("send back")) {
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			key.cancel();
+			try {
+				socketChannel.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+	}
+
+	public void handle_receive_gameplay(SelectionKey key) {
+		SocketChannel socketChannel = null;
+		GamePlayer message = null;
+		GamePlayer sendMessage = new GamePlayer();
+		socketChannel = (SocketChannel) key.channel();
+		rBuffer.clear();
+		try {
+			int count = socketChannel.read(rBuffer);
+			if (count > 0) {
+				rBuffer.flip();
+				message = GamePlayer.byte2Message(rBuffer.array());
+				System.out.println("Receive from"
+						+ socketChannel.socket().getInetAddress() + " : "
+						+ message.getb() + "," + message.getUsername() + ","
+						+ message.getPassword());
+				if (message.getStr().equals("send back")) {
 					sendMessage.setb((byte) 2);
 					sendMessage.setstr("get message from server");
 					sBuffer.clear();
@@ -193,13 +258,14 @@ public class NioServer {
 			}
 		};
 		accept.start();
-		server.service();
+		server.loginService();
 		/*
-		 * Message message=new Message();
+		 * GamePlayer message=new GamePlayer();
 		 * 
 		 * message.setb(((byte)1)); message.setstr("send back!");
 		 * System.out.println(message.getb()+";"+message.getString()); try{ byte
-		 * []be=message.Message2Byte(); Message m1=Message.byte2Message(be);
+		 * []be=message.Message2Byte(); GamePlayer
+		 * m1=GamePlayer.byte2Message(be);
 		 * System.out.println(m1.getb()+";"+m1.getString()); }catch(Exception
 		 * e){ e.printStackTrace(); }
 		 */
