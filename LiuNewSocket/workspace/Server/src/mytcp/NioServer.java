@@ -1,16 +1,5 @@
 package mytcp;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 public class NioServer {
 
@@ -71,7 +60,14 @@ public class NioServer {
 	}
 
 	public void loginService() {
-		Boolean flag = true;
+		Boolean flag;
+		final Timer timer = new Timer();
+		TimerTask task = new TimerTask(){
+			public void run(){
+				flag = false;
+			}
+		};
+		timer.schedule(task, 60*1000);
 		while (flag == true) {
 			synchronized (gate) {
 			}
