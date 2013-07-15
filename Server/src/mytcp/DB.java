@@ -1,3 +1,6 @@
+package mytcp;
+
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +14,8 @@ public class DB {
 		this.client = client;
 	}
 
-	Boolean idCheck(String username, String password) throws SQLException {
+	static Boolean idCheck(String username, String password)
+			throws SQLException {
 
 		Connection dbConnection = null;
 		PreparedStatement preparedStatement = null;
