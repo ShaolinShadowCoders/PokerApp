@@ -11,15 +11,19 @@ import java.util.Iterator;
 import java.util.Set;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -55,17 +59,24 @@ public class MainActivity extends Activity {
 					//on response from the server
 					if(bundle.getBoolean("valid")){
 						//move onto the next screen
+						Intent i = new Intent();
+						i.setClassName("com.example.client",
+								"com.example.client.ReadyScreen");
+						startActivity(i);
 					}else{
 						//restart this activity screen with message prompting them 
 						//that username or password was incorrect
+						alertMessage();	
+						editText.setText("");
+						editTextps.setText("");
 					}
-				}else if(bundle.getString("type").compareTo("ready") == 0){
+				}//else if(bundle.getString("type").compareTo("ready") == 0){
 					//move onto the next screen if ready
-				}else if(bundle.getString("type").compareTo("bet") == 0){
+		//		}else if(bundle.getString("type").compareTo("bet") == 0){
 					//handles incoming messages for betting
-				}else{
+		//		}else{
 					//exit the game
-				}
+		//		}
 				//textView.setText(bundle.getString("string"));
 			}
 			
@@ -213,4 +224,10 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	public void alertMessage() {
+
+		final android.app.AlertDialog.Builder show = new AlertDialog.Builder(this).setTitle("Error").setMessage("Wrong username/password").setNeutralButton("close", null);
+		show.show();
+	}
+	
 }
