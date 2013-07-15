@@ -105,15 +105,15 @@ public class NioServer {
 
 	public void handle_receive(SelectionKey key) {
 		SocketChannel socketChannel = null;
-		Message message = null;
-		Message sendMessage = new Message();
+		GamePlayer message = null;
+		GamePlayer sendMessage = new GamePlayer();
 		socketChannel = (SocketChannel) key.channel();
 		rBuffer.clear();
 		try {
 			int count = socketChannel.read(rBuffer);
 			if (count > 0) {
 				rBuffer.flip();
-				message = Message.byte2Message(rBuffer.array());
+				message = GamePlayer.byte2Message(rBuffer.array());
 				System.out.println("Receive from"
 						+ socketChannel.socket().getInetAddress() + " : "
 						+ message.getb() + "," + message.getUsername() + ","

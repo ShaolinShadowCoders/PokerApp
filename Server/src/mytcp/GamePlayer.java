@@ -6,12 +6,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class Message {
+public class GamePlayer {
 	private byte b;
 	private String username;
 	private String password;
 	private String type; 
+	int chips;
+	int minBet;
 	private boolean valid;
+	private boolean ready;
 	
 	public byte[] Message2Byte() throws IOException{
 		
@@ -31,8 +34,8 @@ public class Message {
         return messagebyte;
 	}
 	
-	public static Message byte2Message(byte[] messagebyte) throws IOException{
-		Message mymessage=new Message();
+	public static GamePlayer byte2Message(byte[] messagebyte) throws IOException{
+		GamePlayer mymessage=new GamePlayer();
 		ByteArrayInputStream bais = new ByteArrayInputStream(messagebyte);// 字节输入流  
         DataInputStream dis = new DataInputStream(bais);// 数据输入流用于包装字节输入流
         
