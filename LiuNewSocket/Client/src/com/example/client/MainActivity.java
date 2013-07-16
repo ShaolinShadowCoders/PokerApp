@@ -17,13 +17,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -53,11 +51,11 @@ public class MainActivity extends Activity {
 				super.handleMessage(msg);
 				Bundle bundle=msg.getData();
 				
-				if(bundle.getString("type").compareTo("login") == 0){
+				if(bundle.getInt("int") == 2){
 					//call function to check and see if they should move onto the next screen
 					//otherwise, restart this activity and make them try to login again depending
 					//on response from the server
-					if(bundle.getBoolean("valid")){
+					if(bundle.getInt("valid") == 1){
 						//move onto the next screen
 						Intent i = new Intent();
 						i.setClassName("com.example.client",
@@ -156,10 +154,9 @@ public class MainActivity extends Activity {
 	
 			//send message to server
 			MyMessage message=new MyMessage();
-			message.setb((byte)9);
-			message.setstr(str);
-			message.setstrps(strps);
-			message.setType("login");
+			message.setb((byte)1);
+			message.setUsername(str);
+			message.setPassword(strps);
 			
 			try {
 				connect.sendBuffer.clear();
@@ -208,13 +205,12 @@ public class MainActivity extends Activity {
 						if (count > 0) {  
 							receiveBuffer.flip();  
 			                message = MyMessage.byte2Message(receiveBuffer.array());  
-			                System.out.println("Receive : "+message.getb()+","+message.getStr());
+			                System.out.println("Receive : "+message.getb()+","+message.getUsername());
 			                Message msg=Message.obtain();
 			                Bundle bundle=new Bundle();
 			                bundle.putInt("int", message.getb());
-			                bundle.putString("string", message.getStr());
-			                bundle.putString("type", message.getType());
-			                bundle.putBoolean("valid", message.getValid());
+			                bundle.putString("string", message.getUsername());
+			                bundle.putInt("valid", message.getValid());
 			                msg.setData(bundle);
 			                handler.sendMessage(msg);
 						}

@@ -49,13 +49,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ReadyScreen extends Activity {
@@ -179,13 +176,11 @@ public class ReadyScreen extends Activity {
 		
 		public void handleMessage(Message msg){
 			
-			String ready=msg.getData().getString("ready");
+			String ready = msg.getData().getString("ready");
 	
 			//send message to server
 			MyMessage message=new MyMessage();
-			message.setb((byte)9);
-			message.setReady(ready);
-			message.setType("ready");
+			message.setb((byte)3);
 			
 			try {
 				connect.sendBuffer.clear();
@@ -234,13 +229,12 @@ public class ReadyScreen extends Activity {
 						if (count > 0) {  
 							receiveBuffer.flip();  
 			                message = MyMessage.byte2Message(receiveBuffer.array());  
-			                System.out.println("Receive : "+message.getb()+","+message.getStr());
+			                System.out.println("Receive : "+message.getb()+","+message.getUsername());
 			                Message msg=Message.obtain();
 			                Bundle bundle=new Bundle();
 			                bundle.putInt("int", message.getb());
-			                bundle.putString("string", message.getStr());
-			                bundle.putString("type", message.getType());
-			                bundle.putBoolean("valid", message.getValid());
+			                bundle.putString("string", message.getUsername());
+			                bundle.putInt("valid", message.getValid());
 			                msg.setData(bundle);
 			                handler.sendMessage(msg);
 						}

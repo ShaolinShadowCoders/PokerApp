@@ -9,12 +9,11 @@ import java.io.IOException;
 public class GamePlayer {
 	private byte b;
 	private String username;
-	private String password;
-	private String type; 
+	private String password; 
 	int chips;
 	int minBet;
-	private boolean valid;
-	private boolean ready;
+	private int valid;
+	private int ready;
 	
 	public byte[] Message2Byte() throws IOException{
 		
@@ -23,9 +22,21 @@ public class GamePlayer {
         DataOutputStream dos = new DataOutputStream(baos);// 数据输出流用于包装字节输出流  
         
         dos.write(b);
-        dos.writeUTF(username);
-        dos.writeUTF(password);
-        dos.writeUTF(type);
+        
+        switch (b) {
+        	case 1://Login
+        		dos.writeUTF(username);
+        		dos.writeUTF(password);
+        		break;
+        	case 2://Check Password
+        		dos.write(valid);
+        		break;
+        	case 3://Client 'Ready' to play
+        		dos.write(ready);
+			default:
+				break;
+		}
+        
         messagebyte=baos.toByteArray();// 将写入的数据转换成字节数组 
         
         dos.close();  
@@ -39,10 +50,25 @@ public class GamePlayer {
 		ByteArrayInputStream bais = new ByteArrayInputStream(messagebyte);// 字节输入流  
         DataInputStream dis = new DataInputStream(bais);// 数据输入流用于包装字节输入流
         
+        
         mymessage.setb(dis.readByte());
-        mymessage.setUsername(dis.readUTF());
-        mymessage.setPassword(dis.readUTF());
-        mymessage.setType(dis.readUTF());
+        switch(mymessage.b){
+        	
+        	case 1://Login
+        	mymessage.setUsername(dis.readUTF());
+            mymessage.setPassword(dis.readUTF());
+        	break;
+        	
+        	case 2://Check Password
+        	mymessage.setValid(dis.read());
+        	break;
+        	
+        	case 3://Client 'Ready' to play
+        	mymessage.setReady(dis.read());
+        	break;
+        }
+    
+        
         
         return mymessage;
 	}
@@ -59,11 +85,11 @@ public class GamePlayer {
 		this.password=strps;
 	}
 	
-	public void setType(String type){
-		this.type=type;
+	public void setReady(int ready){
+		this.ready=ready;
 	}
 	
-	public void setValid(boolean valid){
+	public void setValid(int valid){
 		this.valid=valid;
 	}
 	
@@ -79,11 +105,11 @@ public class GamePlayer {
 		return password;
 	}
 	
-	public String getType(){
-		return type;
+	public int getReady(){
+		return ready;
 	}
 	
-	public Boolean getValid(){
+	public int getValid(){
 		return valid;
 	}
 }

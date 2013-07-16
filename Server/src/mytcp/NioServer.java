@@ -10,6 +10,8 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class NioServer {
 
@@ -65,19 +67,23 @@ public class NioServer {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				System.out.println(e.getMessage());
 			}
 		}
 	}
 
 	public void loginService() {
-		Boolean flag = true;
-		final Timer timer = new Timer();
+		
+		Timer timer = new Timer();
+		final Boolean flag = true;
+		System.out.println("flag is " + flag);
 		TimerTask task = new TimerTask(){
 			public void run(){
-				flag = false;
+				makeFlagFalse(flag);
 			}
 		};
 		timer.schedule(task, 60*1000);
+		System.out.println("flag is now " + flag);
 		while (flag == true) {
 			synchronized (gate) {
 			}
@@ -159,14 +165,14 @@ public class NioServer {
 						+ socketChannel.socket().getInetAddress() + " : "
 						+ message.getb() + "," + message.getUsername() + ","
 						+ message.getPassword());
-				if (message.getType().equals("login")) { // Insert DB Code Here
+				if (message.getb() == 1) { // Insert DB Code Here
 					clientsMap.put(socketChannel, clientsMap.size() + 1);
 					// this code could be put directly as argument into
 					// sendMessage.setValid but separate valid variable enhances
 					// readability
-					Boolean valid = DB.idCheck(message.getUsername(),
+					int valid = DB.idCheck(message.getUsername(),
 							message.getPassword());
-					sendMessage.setb((byte) 1);
+					sendMessage.setb((byte) 2);
 					sendMessage.setValid(valid);
 					sBuffer.clear();
 					sBuffer.put(sendMessage.Message2Byte());
@@ -239,6 +245,10 @@ public class NioServer {
 		 * System.out.println(m1.getb()+";"+m1.getString()); }catch(Exception
 		 * e){ e.printStackTrace(); }
 		 */
+	}
+	
+	public void makeFlagFalse(boolean flag){
+		flag = false;
 	}
 
 }

@@ -14,7 +14,7 @@ public class DB {
 		this.client = client;
 	}
 
-	static Boolean idCheck(String username, String password)
+	static int idCheck(String username, String password)
 			throws SQLException {
 
 		Connection dbConnection = null;
@@ -51,9 +51,9 @@ public class DB {
 				dbConnection.close();
 			}
 			if (password.compareTo(pass) == 0)
-				return true;
+				return 1;
 			else {
-				return false;
+				return 0;
 			}
 		}
 	}
