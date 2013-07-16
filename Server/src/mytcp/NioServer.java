@@ -19,6 +19,7 @@ public class NioServer {
 	 * @param args
 	 */
 	private int port = 20001;
+	final makeFlagFalse flagClass = new makeFlagFalse();
 	// 解码buffer
 	// private Charset cs = Charset.forName("gbk");
 	/* 接受数据缓冲区 */
@@ -26,7 +27,7 @@ public class NioServer {
 	/* 发送数据缓冲区 */
 	private static ByteBuffer rBuffer = ByteBuffer.allocate(1024);
 	/* 映射客户端channel */
-	private Map<SocketChannel, Integer> clientsMap = new HashMap<SocketChannel, Integer>();
+	private static Map<SocketChannel, Integer> clientsMap = new HashMap<SocketChannel, Integer>();
 
 	private Selector selector = null;
 	private ServerSocketChannel serverSocketChannel = null;
@@ -59,6 +60,16 @@ public class NioServer {
 				System.out.println("receive the connection from "
 						+ socketChannel.socket().getInetAddress() + ":"
 						+ socketChannel.socket().getPort());
+				Timer timer = new Timer();
+				
+				System.out.println("flag is " + flagClass.flag);
+				TimerTask task = new TimerTask(){
+					public void run(){
+						flagClass.falsify();
+						System.out.println("flag now is " + flagClass.flag);
+					}
+				};
+				timer.schedule(task, 60*1000);
 				socketChannel.configureBlocking(false);
 				// ByteBuffer buffer=ByteBuffer.allocate(1024);
 				synchronized (gate) {
@@ -72,19 +83,9 @@ public class NioServer {
 		}
 	}
 
-	public void loginService() {
+	public void loginService() throws InterruptedException {
 		
-		Timer timer = new Timer();
-		final Boolean flag = true;
-		System.out.println("flag is " + flag);
-		TimerTask task = new TimerTask(){
-			public void run(){
-				makeFlagFalse(flag);
-			}
-		};
-		timer.schedule(task, 60*1000);
-		System.out.println("flag is now " + flag);
-		while (flag == true) {
+		while (flagClass.flag ==true) {
 			synchronized (gate) {
 			}
 			try {
@@ -166,7 +167,7 @@ public class NioServer {
 						+ message.getb() + "," + message.getUsername() + ","
 						+ message.getPassword());
 				if (message.getb() == 1) { // Insert DB Code Here
-					clientsMap.put(socketChannel, clientsMap.size() + 1);
+					
 					// this code could be put directly as argument into
 					// sendMessage.setValid but separate valid variable enhances
 					// readability
@@ -178,6 +179,30 @@ public class NioServer {
 					sBuffer.put(sendMessage.Message2Byte());
 					sBuffer.flip();
 					socketChannel.write(sBuffer);
+					}
+				else if (message.getb() == 3){
+					
+					if(message.getReady() == 1){
+						if(clientsMap.size() < 6 /*&& flag=false*/){
+							clientsMap.put(socketChannel, clientsMap.size() + 1);
+							sendMessage.setb((byte) 3);
+							sendMessage.setReady(1);
+							sBuffer.clear();
+							sBuffer.put(sendMessage.Message2Byte());
+							sBuffer.flip();
+							socketChannel.write(sBuffer);
+						}
+							
+						else{
+							sendMessage.setb((byte) 3);
+							sendMessage.setReady(0);
+							sBuffer.clear();
+							sBuffer.put(sendMessage.Message2Byte());
+							sBuffer.flip();
+							socketChannel.write(sBuffer);
+						}
+							
+					}		
 				}
 			}
 		} catch (Exception e) {
@@ -192,40 +217,13 @@ public class NioServer {
 		}
 
 	}
+	
+	
 
-	/*
-	 * public void handle_receive_gameplay(SelectionKey key) { SocketChannel
-	 * socketChannel = null; GamePlayer message = null; GamePlayer sendMessage =
-	 * new GamePlayer(); socketChannel = (SocketChannel) key.channel();
-	 * rBuffer.clear(); try { int count = socketChannel.read(rBuffer); if (count
-	 * > 0) { rBuffer.flip(); message =
-	 * GamePlayer.byte2Message(rBuffer.array());
-	 * System.out.println("Receive from" +
-	 * socketChannel.socket().getInetAddress() + " : " + message.getb() + "," +
-	 * message.getUsername() + "," + message.getPassword()); if
-	 * (message.getStr().equals("send back")) { sendMessage.setb((byte) 2);
-	 * sendMessage.setstr("get message from server"); sBuffer.clear(); //
-	 * sBuffer.get(sendMessage.Message2Byte());
-	 * sBuffer.put(sendMessage.Message2Byte()); sBuffer.flip();
-	 * socketChannel.write(sBuffer); } else if
-	 * (message.getStr().equals("send to others")) {// Ask // Lou // about //
-	 * this // code if (!clientsMap.isEmpty()) { //
-	 * for(Map.Entry<SocketChannel,Integer> entry : // clientsMap.entrySet())
-	 * Set<SocketChannel> clientSet = clientsMap.keySet();
-	 * Iterator<SocketChannel> iterator = clientSet.iterator(); while
-	 * (iterator.hasNext()) { SocketChannel temp = iterator.next(); if
-	 * (!socketChannel.equals(temp)) { sendMessage.setb((byte) 2); sendMessage
-	 * .setstr("get message from other player( ip:" + socketChannel.socket()
-	 * .getInetAddress() + ",+ port:" + socketChannel.socket() .getPort());
-	 * sBuffer.clear(); // sBuffer.get(sendMessage.Message2Byte());
-	 * sBuffer.put(sendMessage.Message2Byte()); sBuffer.flip(); // 输出到通道
-	 * temp.write(sBuffer); } } } } } } catch (Exception e) { // TODO: handle
-	 * exception e.printStackTrace(); key.cancel(); try { socketChannel.close();
-	 * } catch (Exception ex) { ex.printStackTrace(); } }
-	 * 
-	 * }
-	 */
-	public static void main(String[] args) {
+	
+	 
+	 
+	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
 		final NioServer server = new NioServer(20001);
 		Thread accept = new Thread() {
@@ -234,21 +232,26 @@ public class NioServer {
 			}
 		};
 		accept.start();
-		server.loginService();
-		/*
-		 * GamePlayer message=new GamePlayer();
-		 * 
-		 * message.setb(((byte)1)); message.setstr("send back!");
-		 * System.out.println(message.getb()+";"+message.getString()); try{ byte
-		 * []be=message.Message2Byte(); GamePlayer
-		 * m1=GamePlayer.byte2Message(be);
-		 * System.out.println(m1.getb()+";"+m1.getString()); }catch(Exception
-		 * e){ e.printStackTrace(); }
-		 */
+		server.loginService(/*int time*/);
+		//while(clientsMap.size() >= 2){
+			//int players =clientsMap.size();
+			//Hand hand = new Hand(players,clientsMap);
+			//server.loginService(10)
+		//}
+		
+		
 	}
 	
-	public void makeFlagFalse(boolean flag){
-		flag = false;
+	public class makeFlagFalse{
+		boolean flag;
+		
+		public makeFlagFalse() {
+			// TODO Auto-generated constructor stub
+			this.flag = true;
+		}
+		public void falsify(){
+			flag = false;
+		}
 	}
 
 }

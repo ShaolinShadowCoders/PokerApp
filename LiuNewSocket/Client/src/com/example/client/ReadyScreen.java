@@ -79,9 +79,13 @@ public class ReadyScreen extends Activity {
 				super.handleMessage(msg);
 				Bundle bundle=msg.getData();
 				
-				if(ready.equals("True")){
-					//Recieve info and assign to player
-				}else if(ready.equals("False")){
+				if(bundle.getInt("ready") == 1){
+					//Receive info and assign to player
+					Intent j = new Intent();
+					j.setClassName("com.example.client",
+							"com.example.client.GameScreen");
+					startActivity(j);
+				}else{
 						//Time out
 						alertMessage();	
 						System.exit(0);
@@ -132,7 +136,7 @@ public class ReadyScreen extends Activity {
 	  	    public void run(){
 	  	    	Message msg=Message.obtain();
 				Bundle bundle=new Bundle();
-/*new*/			bundle.putString("ready", "False");
+/*new*/			bundle.putInt("ready", 0);
 				msg.setData(bundle);
 				threadHandler.sendMessage(msg);
 	  	    }
@@ -148,13 +152,13 @@ public class ReadyScreen extends Activity {
 				// TODO Auto-generated method stub
 				Message msg=Message.obtain();
 				Bundle bundle=new Bundle();
-/*new*/			bundle.putString("ready", "True");
+/*new*/			bundle.putInt("ready", 1);
 				msg.setData(bundle);
-				String ready = "True";
+				//int ready = 1;
             	timer.cancel();
-                Intent j = new Intent(arg0.getContext(), GameScreen.class);
-				threadHandler.sendMessage(msg);
-				startActivity(j);
+            	threadHandler.sendMessage(msg);
+            	//sending a message to the server
+                
 			}
 		});
 	}
@@ -176,12 +180,12 @@ public class ReadyScreen extends Activity {
 		
 		public void handleMessage(Message msg){
 			
-			String ready = msg.getData().getString("ready");
+			int ready = msg.getData().getInt("ready");
 	
 			//send message to server
 			MyMessage message=new MyMessage();
 			message.setb((byte)3);
-			
+			message.setReady(ready);
 			try {
 				connect.sendBuffer.clear();
 				connect.sendBuffer.put(message.Message2Byte());
@@ -232,9 +236,8 @@ public class ReadyScreen extends Activity {
 			                System.out.println("Receive : "+message.getb()+","+message.getUsername());
 			                Message msg=Message.obtain();
 			                Bundle bundle=new Bundle();
-			                bundle.putInt("int", message.getb());
-			                bundle.putString("string", message.getUsername());
-			                bundle.putInt("valid", message.getValid());
+			                bundle.putInt("int", message.getb());			               
+			                bundle.putInt("ready", message.getReady());
 			                msg.setData(bundle);
 			                handler.sendMessage(msg);
 						}
