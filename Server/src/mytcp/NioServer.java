@@ -259,6 +259,9 @@ public class NioServer {
 		};
 		accept.start();
 		server.loginService();
+		//determine when login is all done, set loginService.flag = false
+		//start gameservice
+		
 		/*
 		 * GamePlayer message=new GamePlayer();
 		 * 
