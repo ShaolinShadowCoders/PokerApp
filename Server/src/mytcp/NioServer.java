@@ -8,7 +8,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,6 +71,13 @@ public class NioServer {
 
 	public void loginService() {
 		Boolean flag = true;
+		final Timer timer = new Timer();
+		TimerTask task = new TimerTask(){
+			public void run(){
+				flag = false;
+			}
+		};
+		timer.schedule(task, 60*1000);
 		while (flag == true) {
 			synchronized (gate) {
 			}
@@ -117,7 +123,7 @@ public class NioServer {
 				for (SelectionKey key : selectionKeys) {
 					try {
 						if (key.isReadable()) {
-							handle_receive_gameplay(key);
+							// handle_receive_gameplay(key);
 						}
 					} catch (Exception e) {
 						// TODO: handle exception
@@ -181,74 +187,38 @@ public class NioServer {
 
 	}
 
-	public void handle_receive_gameplay(SelectionKey key) {
-		SocketChannel socketChannel = null;
-		GamePlayer message = null;
-		GamePlayer sendMessage = new GamePlayer();
-		socketChannel = (SocketChannel) key.channel();
-		rBuffer.clear();
-		try {
-			int count = socketChannel.read(rBuffer);
-			if (count > 0) {
-				rBuffer.flip();
-				message = GamePlayer.byte2Message(rBuffer.array());
-				System.out.println("Receive from"
-						+ socketChannel.socket().getInetAddress() + " : "
-						+ message.getb() + "," + message.getUsername() + ","
-						+ message.getPassword());
-				if (message.getStr().equals("send back")) {
-					sendMessage.setb((byte) 2);
-					sendMessage.setstr("get message from server");
-					sBuffer.clear();
-					// sBuffer.get(sendMessage.Message2Byte());
-					sBuffer.put(sendMessage.Message2Byte());
-					sBuffer.flip();
-					socketChannel.write(sBuffer);
-				} else if (message.getStr().equals("send to others")) {// Ask
-																		// Lou
-																		// about
-																		// this
-																		// code
-					if (!clientsMap.isEmpty()) {
-						// for(Map.Entry<SocketChannel,Integer> entry :
-						// clientsMap.entrySet())
-						Set<SocketChannel> clientSet = clientsMap.keySet();
-						Iterator<SocketChannel> iterator = clientSet.iterator();
-						while (iterator.hasNext()) {
-							SocketChannel temp = iterator.next();
-							if (!socketChannel.equals(temp)) {
-								sendMessage.setb((byte) 2);
-								sendMessage
-										.setstr("get message from other player( ip:"
-												+ socketChannel.socket()
-														.getInetAddress()
-												+ ",+ port:"
-												+ socketChannel.socket()
-														.getPort());
-								sBuffer.clear();
-								// sBuffer.get(sendMessage.Message2Byte());
-								sBuffer.put(sendMessage.Message2Byte());
-								sBuffer.flip();
-								// 输出到通道
-								temp.write(sBuffer);
-							}
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			key.cancel();
-			try {
-				socketChannel.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-
-	}
-
+	/*
+	 * public void handle_receive_gameplay(SelectionKey key) { SocketChannel
+	 * socketChannel = null; GamePlayer message = null; GamePlayer sendMessage =
+	 * new GamePlayer(); socketChannel = (SocketChannel) key.channel();
+	 * rBuffer.clear(); try { int count = socketChannel.read(rBuffer); if (count
+	 * > 0) { rBuffer.flip(); message =
+	 * GamePlayer.byte2Message(rBuffer.array());
+	 * System.out.println("Receive from" +
+	 * socketChannel.socket().getInetAddress() + " : " + message.getb() + "," +
+	 * message.getUsername() + "," + message.getPassword()); if
+	 * (message.getStr().equals("send back")) { sendMessage.setb((byte) 2);
+	 * sendMessage.setstr("get message from server"); sBuffer.clear(); //
+	 * sBuffer.get(sendMessage.Message2Byte());
+	 * sBuffer.put(sendMessage.Message2Byte()); sBuffer.flip();
+	 * socketChannel.write(sBuffer); } else if
+	 * (message.getStr().equals("send to others")) {// Ask // Lou // about //
+	 * this // code if (!clientsMap.isEmpty()) { //
+	 * for(Map.Entry<SocketChannel,Integer> entry : // clientsMap.entrySet())
+	 * Set<SocketChannel> clientSet = clientsMap.keySet();
+	 * Iterator<SocketChannel> iterator = clientSet.iterator(); while
+	 * (iterator.hasNext()) { SocketChannel temp = iterator.next(); if
+	 * (!socketChannel.equals(temp)) { sendMessage.setb((byte) 2); sendMessage
+	 * .setstr("get message from other player( ip:" + socketChannel.socket()
+	 * .getInetAddress() + ",+ port:" + socketChannel.socket() .getPort());
+	 * sBuffer.clear(); // sBuffer.get(sendMessage.Message2Byte());
+	 * sBuffer.put(sendMessage.Message2Byte()); sBuffer.flip(); // 输出到通道
+	 * temp.write(sBuffer); } } } } } } catch (Exception e) { // TODO: handle
+	 * exception e.printStackTrace(); key.cancel(); try { socketChannel.close();
+	 * } catch (Exception ex) { ex.printStackTrace(); } }
+	 * 
+	 * }
+	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		final NioServer server = new NioServer(20001);
