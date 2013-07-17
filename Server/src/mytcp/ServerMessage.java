@@ -6,7 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class GamePlayer {
+public class ServerMessage {
 	private byte b;
 	private String username;
 	private String password; 
@@ -14,6 +14,7 @@ public class GamePlayer {
 	int minBet;
 	private int valid;
 	private int ready;
+	private int card1,card2;
 	
 	public byte[] Message2Byte() throws IOException{
 		
@@ -33,6 +34,11 @@ public class GamePlayer {
         		break;
         	case 3://Client 'Ready' to play
         		dos.write(ready);
+        		break;
+        	case 4:
+        		dos.write(card1);
+        		dos.write(card2);
+        		break;
 			default:
 				break;
 		}
@@ -45,8 +51,8 @@ public class GamePlayer {
         return messagebyte;
 	}
 	
-	public static GamePlayer byte2Message(byte[] messagebyte) throws IOException{
-		GamePlayer mymessage=new GamePlayer();
+	public static ServerMessage byte2Message(byte[] messagebyte) throws IOException{
+		ServerMessage mymessage=new ServerMessage();
 		ByteArrayInputStream bais = new ByteArrayInputStream(messagebyte);// 字节输入流  
         DataInputStream dis = new DataInputStream(bais);// 数据输入流用于包装字节输入流
         
@@ -93,6 +99,16 @@ public class GamePlayer {
 		this.valid=valid;
 	}
 	
+	public void setCard1(int card1) {
+		// TODO Auto-generated method stub
+		this.card1 = card1;
+	}
+	
+	public void setCard2(int card2) {
+		// TODO Auto-generated method stub
+		this.card2 = card2;
+	}
+	
 	public byte getb(){
 		return b;
 	}
@@ -112,4 +128,6 @@ public class GamePlayer {
 	public int getValid(){
 		return valid;
 	}
+
+	
 }

@@ -8,6 +8,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -117,8 +118,35 @@ public class NioServer {
 		}
 	}
 
-	public void gameService() {
+	public void gameService() throws IOException {
 		Boolean flag = true;
+		Dealer dealer = new Dealer();
+		dealer.createDeck();
+		SocketChannel currentPlayer = null;
+		
+		if(!clientsMap.isEmpty()){  
+			Set<SocketChannel> clientSet = clientsMap.keySet();
+			Iterator<SocketChannel> iterator=clientSet.iterator();
+			while(iterator.hasNext()){
+                currentPlayer =iterator.next();  
+                ServerMessage sendMessage = new ServerMessage();
+        		sendMessage.setb((byte) 4);
+        		
+        		sendMessage.setCard1(dealer.dealCard(dealer.deck));
+        		sendMessage.setCard2(dealer.dealCard(dealer.deck));
+        		sBuffer.clear();
+        		sBuffer.put(sendMessage.Message2Byte());
+        		sBuffer.flip();
+        		currentPlayer.write(sBuffer); 
+            }  
+        }
+		
+		//dealing the cards 
+		//assigning blinds 
+		//sending whose turn it is
+		
+		
+		
 		while (flag == true) {
 			synchronized (gate) {
 			}
@@ -153,15 +181,15 @@ public class NioServer {
 
 	public void handle_receive_login(SelectionKey key) {
 		SocketChannel socketChannel = null;
-		GamePlayer message = null;
-		GamePlayer sendMessage = new GamePlayer();
+		ServerMessage message = null;
+		ServerMessage sendMessage = new ServerMessage();
 		socketChannel = (SocketChannel) key.channel();
 		rBuffer.clear();
 		try {
 			int count = socketChannel.read(rBuffer);
 			if (count > 0) {
 				rBuffer.flip();
-				message = GamePlayer.byte2Message(rBuffer.array());
+				message = ServerMessage.byte2Message(rBuffer.array());
 				System.out.println("Receive from"
 						+ socketChannel.socket().getInetAddress() + " : "
 						+ message.getb() + "," + message.getUsername() + ","
@@ -218,12 +246,76 @@ public class NioServer {
 
 	}
 	
+	public void handle_receive_gamePlay(SelectionKey key) {
+		SocketChannel socketChannel = null;
+		ServerMessage message = null;
+		ServerMessage sendMessage = new ServerMessage();
+		socketChannel = (SocketChannel) key.channel();
+		rBuffer.clear();
+		try {
+			int count = socketChannel.read(rBuffer);
+			if (count > 0) {
+				rBuffer.flip();
+				message = ServerMessage.byte2Message(rBuffer.array());
+				
+				if (message.getb() == 6) { // Insert DB Code Here
+					
+					// this code could be put directly as argument into
+					// sendMessage.setValid but separate valid variable enhances
+					// readability
+					int valid = DB.idCheck(message.getUsername(),
+							message.getPassword());
+					sendMessage.setb((byte) 2);
+					sendMessage.setValid(valid);
+					sBuffer.clear();
+					sBuffer.put(sendMessage.Message2Byte());
+					sBuffer.flip();
+					socketChannel.write(sBuffer);
+					}
+				else if (message.getb() == 3){
+					
+					if(message.getReady() == 1){
+						if(clientsMap.size() < 6 /*&& flag=false*/){
+							clientsMap.put(socketChannel, clientsMap.size() + 1);
+							sendMessage.setb((byte) 3);
+							sendMessage.setReady(1);
+							sBuffer.clear();
+							sBuffer.put(sendMessage.Message2Byte());
+							sBuffer.flip();
+							socketChannel.write(sBuffer);
+						}
+							
+						else{
+							sendMessage.setb((byte) 3);
+							sendMessage.setReady(0);
+							sBuffer.clear();
+							sBuffer.put(sendMessage.Message2Byte());
+							sBuffer.flip();
+							socketChannel.write(sBuffer);
+						}
+							
+					}		
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			key.cancel();
+			try {
+				socketChannel.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+	}
+	
 	
 
 	
 	 
 	 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		// TODO Auto-generated method stub
 		final NioServer server = new NioServer(20001);
 		Thread accept = new Thread() {
@@ -233,11 +325,12 @@ public class NioServer {
 		};
 		accept.start();
 		server.loginService(/*int time*/);
-		//while(clientsMap.size() >= 2){
-			//int players =clientsMap.size();
+		while(clientsMap.size() >= 2){
+			
+			server.gameService();
 			//Hand hand = new Hand(players,clientsMap);
 			//server.loginService(10)
-		//}
+		}
 		
 		
 	}
