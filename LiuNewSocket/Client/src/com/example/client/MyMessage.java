@@ -12,6 +12,9 @@ public class MyMessage {
 	private String password;
 	private int valid;
 	private int ready;
+	private int cardOne;
+	private int cardTwo;
+	private int turn;
 	
 	//Change up here for the type of message I'm looking for when receiving
 	
@@ -33,6 +36,11 @@ public class MyMessage {
     		break;
     	case 3://Client 'Ready' to play
     		dos.write(ready);
+    	case 4://Write cards;
+    		dos.write(cardOne);
+    		dos.write(cardTwo);
+    	case 5:
+    		dos.write(turn);
 		default:
 			break;
         }       
@@ -68,6 +76,12 @@ public class MyMessage {
     		case 3://Client 'Ready' to play
     			mymessage.setReady(dis.read());
     			break;
+    		case 4://set cards
+    			mymessage.setCardOne(dis.read());
+    			mymessage.setCardTwo(dis.read());
+    			break;
+    		case 5:
+    			mymessage.setTurn(dis.read());
         }
                
         return mymessage;
@@ -93,6 +107,18 @@ public class MyMessage {
 		this.valid=valid;
 	}
 	
+	private void setCardOne(int card){
+		this.cardOne = card;
+	}
+	
+	private void setCardTwo(int card){
+		this.cardTwo = card;
+	}
+	
+	private void setTurn(int turn){
+		this.turn = turn;
+	}
+	
 	public byte getb(){
 		return b;
 	}
@@ -113,4 +139,15 @@ public class MyMessage {
 		return valid;
 	}
 	
+	public int getCardOne(){
+		return this.cardOne;
+	}
+	
+	public int getCardTwo(){
+		return this.cardTwo;
+	}
+	
+	public int getTurn(){
+		return this.turn;
+	}
 }
