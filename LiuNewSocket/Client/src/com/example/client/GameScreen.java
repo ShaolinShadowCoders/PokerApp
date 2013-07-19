@@ -2,28 +2,22 @@
 	package com.example.client;
 
 	import java.io.IOException;
-	import java.net.InetSocketAddress;
-	import java.net.SocketAddress;
-	import java.nio.ByteBuffer;
-	import java.nio.channels.SelectionKey;
-	import java.nio.channels.Selector;
-	import java.nio.channels.SocketChannel;
-	import java.util.Iterator;
-	import java.util.Set;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+import java.util.Set;
 
-	import android.app.Activity;
-	import android.app.AlertDialog;
-	import android.content.Intent;
-	import android.os.Bundle;
-	import android.os.Handler;
-	import android.os.Looper;
-	import android.os.Message;
-	import android.view.Menu;
-	import android.view.View;
-	import android.view.View.OnClickListener;
-	import android.widget.Button;
-	import android.widget.EditText;
-	import android.widget.TextView;
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.Menu;
+import android.widget.TextView;
 
 	public class GameScreen extends Activity {
 		
@@ -34,6 +28,7 @@
 		MyHandle threadHandler;
 		Connect connect=null;
 		Object myLock=new Object();
+		boolean gameTime = false;
 		
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +37,9 @@
 			cardOne = (TextView) findViewById(R.id.card_one);
 			cardTwo = (TextView) findViewById(R.id.card_two);
 			turn = (TextView) findViewById(R.id.turn);
+			//send server a message 
+			while(gameTime == false)
+				
 			handler=new Handler(){
 
 				@Override
@@ -49,7 +47,7 @@
 					// TODO Auto-generated method stub
 					super.handleMessage(msg);
 					Bundle bundle=msg.getData();
-					
+					System.out.println("on the game screen receiving message");
 					if(bundle.getInt("b") == 4){
 						//Assign the card values
 						cardOne.setText(bundle.getInt("cardOne"));
@@ -134,23 +132,15 @@
 			}
 			
 			public void handleMessage(Message msg){
-				
-				String str=msg.getData().getString("name");
-				String strps=msg.getData().getString("password");
-		
-				//send message to server
 				MyMessage message=new MyMessage();
-				message.setb((byte)1);
-				message.setUsername(str);
-				message.setPassword(strps);
-				
+				message.setb((byte)4);
+							
 				try {
 					connect.sendBuffer.clear();
 					connect.sendBuffer.put(message.Message2Byte());
 					connect.sendBuffer.flip();
 					connect.socketChannel.write(connect.sendBuffer);
 				} catch (Exception e) {
-					// TODO: handle exception
 					e.printStackTrace();
 				}
 			}
@@ -191,7 +181,6 @@
 							if (count > 0) {  
 								receiveBuffer.flip();  
 				                message = MyMessage.byte2Message(receiveBuffer.array());  
-				                System.out.println("Receive : "+message.getb()+","+message.getUsername());
 				                Message msg=Message.obtain();
 				                Bundle bundle=new Bundle();
 				                if (message.getb() == 4){ //Cards

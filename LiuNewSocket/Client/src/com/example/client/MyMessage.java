@@ -140,14 +140,14 @@ public class MyMessage {
 	}
 	
 	public int getCardOne(){
-		return this.cardOne;
+		return cardOne;
 	}
 	
 	public int getCardTwo(){
-		return this.cardTwo;
+		return cardTwo;
 	}
 	
 	public int getTurn(){
-		return this.turn;
+		return turn;
 	}
 }

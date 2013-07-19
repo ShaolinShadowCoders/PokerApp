@@ -82,6 +82,7 @@ public class ReadyScreen extends Activity {
 				if(bundle.getInt("ready") == 1){
 					//Receive info and assign to player
 					Intent j = new Intent();
+					
 					j.setClassName("com.example.client",
 							"com.example.client.GameScreen");
 					startActivity(j);
