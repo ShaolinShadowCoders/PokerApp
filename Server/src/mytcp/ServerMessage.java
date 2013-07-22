@@ -14,8 +14,9 @@ public class ServerMessage {
 	int minBet;
 	private int valid;
 	private int ready;
+	private int turn;
 	private int card1,card2;
-	
+		
 	public byte[] Message2Byte() throws IOException{
 		
 		byte[] messagebyte;
@@ -38,6 +39,9 @@ public class ServerMessage {
         	case 4:
         		dos.write(card1);
         		dos.write(card2);
+        		break;
+        	case 5:
+        		dos.write(turn);
         		break;
 			default:
 				break;

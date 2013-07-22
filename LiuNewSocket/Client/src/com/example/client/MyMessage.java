@@ -36,11 +36,16 @@ public class MyMessage {
     		break;
     	case 3://Client 'Ready' to play
     		dos.write(ready);
+    		break;
     	case 4://Write cards;
     		dos.write(cardOne);
     		dos.write(cardTwo);
+    		break;
     	case 5:
     		dos.write(turn);
+    		break;
+    	case -1:
+    		
 		default:
 			break;
         }       

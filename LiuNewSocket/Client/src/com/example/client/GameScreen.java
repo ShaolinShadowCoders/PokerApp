@@ -29,6 +29,7 @@ import android.widget.TextView;
 		Connect connect=null;
 		Object myLock=new Object();
 		boolean gameTime = false;
+		boolean flag = true;
 		
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
@@ -37,30 +38,37 @@ import android.widget.TextView;
 			cardOne = (TextView) findViewById(R.id.card_one);
 			cardTwo = (TextView) findViewById(R.id.card_two);
 			turn = (TextView) findViewById(R.id.turn);
-			//send server a message 
-			while(gameTime == false)
-				
+			System.out.println("Start of GameScreen");
+			
 			handler=new Handler(){
 
 				@Override
 				public void handleMessage(Message msg) { //Handle code for receiving messages 
-					// TODO Auto-generated method stub
 					super.handleMessage(msg);
 					Bundle bundle=msg.getData();
 					System.out.println("on the game screen receiving message");
-					if(bundle.getInt("b") == 4){
+					
+					switch(bundle.getInt("b")){
+					case 4: 
 						//Assign the card values
 						cardOne.setText(bundle.getInt("cardOne"));
 						cardTwo.setText(bundle.getInt("cardTwo"));
-						
-					}else if(bundle.getInt("b") == 5){
-						//Get the turn value
-						if (bundle.getInt("turn") == 1){
+						break;
+					case 5:
+						if (bundle.getInt("turn") == 1)
 							turn.setText("Yes");
-						} else {
+						 else 
 							turn.setText("No");
-						}
+						break;
+					case -1:
+						//cardOne.setText("Current Game in Progress");
+						//send back to the ready screen
+						break;
+					case -2:
+						cardOne.setText("Waiting for other players");
+						break;
 					}
+					
 				}
 				
 			};
@@ -99,21 +107,21 @@ import android.widget.TextView;
 			});
 			sendThread.start();
 			
-/*			button.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
-
-					Message msg=Message.obtain();
-					Bundle bundle=new Bundle();
-					bundle.putString("name", str);
-					bundle.putString("password", strps);
-					msg.setData(bundle);
-					threadHandler.sendMessage(msg);
-					
-				}
-			});*/
+			//send server a message
+			Message msg=Message.obtain(); 
+			//while(gameTime == false){
+			Bundle bundle=new Bundle();
+			msg.setData(bundle);
+			System.out.println("Going to send the message");
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			threadHandler.sendMessage(msg);
+			//}
+			
 		}
 
 		@Override
@@ -132,18 +140,27 @@ import android.widget.TextView;
 			}
 			
 			public void handleMessage(Message msg){
+				
 				MyMessage message=new MyMessage();
-				message.setb((byte)4);
-							
+				message.setb((byte)4);			
 				try {
+					System.out.println("Does it write to the server before the crash?");
 					connect.sendBuffer.clear();
 					connect.sendBuffer.put(message.Message2Byte());
 					connect.sendBuffer.flip();
 					connect.socketChannel.write(connect.sendBuffer);
+					//msg.recycle();
 				} catch (Exception e) {
 					e.printStackTrace();
+					System.out.println(e.getMessage());
 				}
+			
 			}
+		}
+		
+		public void onStart(){
+			super.onStart();
+			
 		}
 		
 		public class Connect {
@@ -158,7 +175,7 @@ import android.widget.TextView;
 					SocketAddress remoteAddress=new InetSocketAddress("192.168.2.11", 20001);
 					socketChannel.connect(remoteAddress);
 					socketChannel.configureBlocking(false);
-					System.out.println("与服务器的连接建立成功");
+					System.out.println("Connected");
 				    selector=Selector.open();
 				    socketChannel.register(selector, SelectionKey.OP_READ);
 				} catch (Exception e) {
@@ -184,12 +201,15 @@ import android.widget.TextView;
 				                Message msg=Message.obtain();
 				                Bundle bundle=new Bundle();
 				                if (message.getb() == 4){ //Cards
+				                	gameTime = true;
 				                	bundle.putInt("b", message.getb());
 				                	bundle.putInt("cardOne", message.getCardOne());
 				                	bundle.putInt("cardTwo", message.getCardTwo());
 				                } else if (message.getb() == 5){
 				                	bundle.putInt("b", message.getb());
 				                	bundle.putInt("turn", message.getTurn());
+				                }else if(message.getb() == -2){
+				                	bundle.putInt("b", message.getb());
 				                }
 				                msg.setData(bundle);
 				                handler.sendMessage(msg);

@@ -88,9 +88,9 @@ public class NioServer {
 			synchronized (gate) {
 			}
 			try {
-				//int n = selector.select();
-				//if (n == 0)
-					//continue;
+				int n = selector.select();
+				if (n == 0){}
+				else{
 				Set<SelectionKey> selectionKeys = selector.selectedKeys();
 				for (SelectionKey key : selectionKeys) {
 					try {
@@ -109,6 +109,7 @@ public class NioServer {
 					}
 				}
 				selectionKeys.clear();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -177,6 +178,7 @@ public class NioServer {
 					break;
 				
 				case (4):
+					System.out.println("Hey it gets here you dum dum");
 					if(timerFlag.flag == true){
 						sendMessage.setb((byte) -2); /*send message saying "waiting for other players*/
 						sendMes sendMes1 = new sendMes(sendMessage, socketChannel);
@@ -216,8 +218,10 @@ public class NioServer {
 				sendMessage.setCard2(dealer.dealCard(dealer.deck));
 				sendMes sendMes1 = new sendMes(sendMessage, currentPlayer);
 				sendMes1.send();
+				System.out.println("Dealt Cards");
 			}
-			//send who's turn it is 
+			//send who's turn it is
+			
 			loginService();
 		}
 	}
