@@ -21,10 +21,10 @@ import android.widget.TextView;
 
 	public class GameScreen extends Activity {
 		
-		TextView cardOne;
-		TextView cardTwo;
-		TextView turn;
-		Handler handler;
+		static TextView cardOne;
+		static TextView cardTwo;
+		static TextView turn;
+		static Handler handler;
 		MyHandle threadHandler;
 		Connect connect=null;
 		Object myLock=new Object();
@@ -65,7 +65,7 @@ import android.widget.TextView;
 				
 			};
 			
-			
+		/*	
 			Thread receiveThread=new Thread(
 					
 					new Runnable() {
@@ -98,7 +98,7 @@ import android.widget.TextView;
 				}
 			});
 			sendThread.start();
-			
+			*/
 /*			button.setOnClickListener(new OnClickListener() {
 				
 				@Override
@@ -130,7 +130,7 @@ import android.widget.TextView;
 			public MyHandle(Looper looper){ /*constructor*/
 				super(looper);
 			}
-			
+		/*	
 			public void handleMessage(Message msg){
 				MyMessage message=new MyMessage();
 				message.setb((byte)4);
@@ -165,22 +165,22 @@ import android.widget.TextView;
 					// TODO: handle exception
 					e.printStackTrace();
 				}
-			}
+			}*//*
 			public void play() throws IOException{
 				
 				//socketChannel.register(selector, SelectionKey.OP_READ|SelectionKey.OP_WRITE);
-					Set readyKeySet=selector.selectedKeys();
+					Set readyKeySet=ServerService.selector.selectedKeys();
 					Iterator<SelectionKey> iterator=readyKeySet.iterator();
 					SelectionKey key=null;
 					while(iterator.hasNext()){
 						key=(SelectionKey) iterator.next();
 						MyMessage message;
 						if(key.isReadable()){ //receive message from server
-							receiveBuffer.clear();
-							int count=socketChannel.read(receiveBuffer);
+							ServerService.receiveBuffer.clear();
+							int count=ServerService.socketChannel.read(ServerService.receiveBuffer);
 							if (count > 0) {  
-								receiveBuffer.flip();  
-				                message = MyMessage.byte2Message(receiveBuffer.array());  
+								ServerService.receiveBuffer.flip();  
+				                message = MyMessage.byte2Message(ServerService.receiveBuffer.array());  
 				                Message msg=Message.obtain();
 				                Bundle bundle=new Bundle();
 				                if (message.getb() == 4){ //Cards
@@ -197,8 +197,15 @@ import android.widget.TextView;
 						}
 					}
 					readyKeySet.clear();
-			}
+			}*/
 		}
 
+		 public static void setCard(int card, int num){
+			 if (card == 1){
+				 cardOne.setText(num);
+			 } else {
+				 cardTwo.setText(num);
+			 }
+		 }
 		
-	}
+		}

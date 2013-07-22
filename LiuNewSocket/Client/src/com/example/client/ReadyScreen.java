@@ -60,8 +60,7 @@ public class ReadyScreen extends Activity {
 	Button button;
 	String ready;
 	TextView textView;
-	Handler handler;
-	MyHandle threadHandler;
+	static Handler handler;
 	Connect connect=null;
 	Object myLock=new Object();
 	
@@ -95,7 +94,7 @@ public class ReadyScreen extends Activity {
 			
 		};
 		
-		
+/*		
 		Thread receiveThread=new Thread(
 				
 				new Runnable() {
@@ -128,7 +127,7 @@ public class ReadyScreen extends Activity {
 			}
 		});
 		sendThread.start();
-		
+		*/
 		
 		
   	    button =  (Button) findViewById(R.id.readyBtn); 
@@ -139,7 +138,7 @@ public class ReadyScreen extends Activity {
 				Bundle bundle=new Bundle();
 /*new*/			bundle.putInt("ready", 0);
 				msg.setData(bundle);
-				threadHandler.sendMessage(msg);
+				ServerService.threadHandler.sendMessage(msg);
 	  	    }
 	  	    };
 
@@ -157,7 +156,7 @@ public class ReadyScreen extends Activity {
 				msg.setData(bundle);
 				//int ready = 1;
             	timer.cancel();
-            	threadHandler.sendMessage(msg);
+            	ServerService.threadHandler.sendMessage(msg);
             	//sending a message to the server
                 
 			}
@@ -170,12 +169,12 @@ public class ReadyScreen extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+	/*
 	public class MyHandle extends Handler{  //Handle for sending a message on a different thread
 		public MyHandle(){
 			
 		}
-		public MyHandle(Looper looper){ /*constructor*/
+		public MyHandle(Looper looper){ 
 			super(looper);
 		}
 		
@@ -218,22 +217,22 @@ public class ReadyScreen extends Activity {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
-		}
+		}*//*
 		public void play() throws IOException{
 			
 			//socketChannel.register(selector, SelectionKey.OP_READ|SelectionKey.OP_WRITE);
-				Set readyKeySet=selector.selectedKeys();
+				Set readyKeySet=ServerService.selector.selectedKeys();
 				Iterator<SelectionKey> iterator=readyKeySet.iterator();
 				SelectionKey key=null;
 				while(iterator.hasNext()){
 					key=(SelectionKey) iterator.next();
 					MyMessage message;
 					if(key.isReadable()){ //receive message from server
-						receiveBuffer.clear();
-						int count=socketChannel.read(receiveBuffer);
+						ServerService.receiveBuffer.clear();
+						int count=ServerService.socketChannel.read(ServerService.receiveBuffer);
 						if (count > 0) {  
-							receiveBuffer.flip();  
-			                message = MyMessage.byte2Message(receiveBuffer.array());  
+							ServerService.receiveBuffer.flip();  
+			                message = MyMessage.byte2Message(ServerService.receiveBuffer.array());  
 			                System.out.println("Receive : "+message.getb()+","+message.getUsername());
 			                Message msg=Message.obtain();
 			                Bundle bundle=new Bundle();
@@ -246,7 +245,7 @@ public class ReadyScreen extends Activity {
 				}
 				readyKeySet.clear();
 		}
-	}
+	*/
 
 	public void alertMessage() {
 

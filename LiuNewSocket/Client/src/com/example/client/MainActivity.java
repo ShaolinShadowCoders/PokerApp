@@ -10,6 +10,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -30,8 +31,7 @@ public class MainActivity extends Activity {
 	TextView textView;
 	EditText editText;
 	EditText editTextps;
-	Handler handler;
-	MyHandle threadHandler;
+	static Handler handler;
 	Connect connect=null;
 	Object myLock=new Object();
 	
@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
 			
 		};
 		
-		
+		/*	IN SERVER SERVICE
 		Thread receiveThread=new Thread(
 				
 				new Runnable() {
@@ -112,7 +112,10 @@ public class MainActivity extends Activity {
 
 			}
 		});
-		sendThread.start();
+		sendThread.start();*/
+		
+		startService(new Intent(getBaseContext(), ServerService.class));
+
 		
 		button.setOnClickListener(new OnClickListener() {
 			
@@ -126,7 +129,7 @@ public class MainActivity extends Activity {
 				bundle.putString("name", str);
 				bundle.putString("password", strps);
 				msg.setData(bundle);
-				threadHandler.sendMessage(msg);
+				ServerService.threadHandler.sendMessage(msg);
 				
 			}
 		});
@@ -139,12 +142,14 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
+	/*	IN SERVER SERVICE
+
 	public class MyHandle extends Handler{  //Handle for sending a message on a different thread
 		public MyHandle(){
 			
 		}
-		public MyHandle(Looper looper){ /*constructor*/
-			super(looper);
+		public MyHandle(Looper looper){ 
+					super(looper);
 		}
 		
 		public void handleMessage(Message msg){
@@ -190,21 +195,22 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 			}
 		}
-		public void play() throws IOException{
+		*/
+	/*	public void play() throws IOException{
 			
 			//socketChannel.register(selector, SelectionKey.OP_READ|SelectionKey.OP_WRITE);
-				Set readyKeySet=selector.selectedKeys();
+				Set readyKeySet=ServerService.selector.selectedKeys();
 				Iterator<SelectionKey> iterator=readyKeySet.iterator();
 				SelectionKey key=null;
 				while(iterator.hasNext()){
 					key=(SelectionKey) iterator.next();
 					MyMessage message;
 					if(key.isReadable()){ //receive message from server
-						receiveBuffer.clear();
-						int count=socketChannel.read(receiveBuffer);
+						ServerService.receiveBuffer.clear();
+						int count=ServerService.socketChannel.read(ServerService.receiveBuffer);
 						if (count > 0) {  
-							receiveBuffer.flip();  
-			                message = MyMessage.byte2Message(receiveBuffer.array());  
+							ServerService.receiveBuffer.flip();  
+			                message = MyMessage.byte2Message(ServerService.receiveBuffer.array());  
 			                System.out.println("Receive : "+message.getb()+","+message.getUsername());
 			                Message msg=Message.obtain();
 			                Bundle bundle=new Bundle();
@@ -217,8 +223,8 @@ public class MainActivity extends Activity {
 					}
 				}
 				readyKeySet.clear();
-		}
-	}
+		}*/
+	
 
 	public void alertMessage() {
 
