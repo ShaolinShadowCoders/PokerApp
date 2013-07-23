@@ -88,9 +88,9 @@ public class NioServer {
 			synchronized (gate) {
 			}
 			try {
-				//int n = selector.select();
-				//if (n == 0)
-					//continue;
+				int n = selector.select();
+				if (n == 0){}
+				else{
 				Set<SelectionKey> selectionKeys = selector.selectedKeys();
 				for (SelectionKey key : selectionKeys) {
 					try {
@@ -109,6 +109,7 @@ public class NioServer {
 					}
 				}
 				selectionKeys.clear();
+			  }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

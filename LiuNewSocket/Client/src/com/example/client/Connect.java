@@ -20,11 +20,12 @@ public class Connect {
 		// TODO Auto-generated constructor stub
 		try {
 			socketChannel=SocketChannel.open();
-			SocketAddress remoteAddress=new InetSocketAddress("58.198.96.101", 20001);
+			SocketAddress remoteAddress=new InetSocketAddress("192.168.2.11", 20001);
 			socketChannel.connect(remoteAddress);
 			socketChannel.configureBlocking(false);
 			System.out.println("与服务器的连接建立成功");
 		    selector=Selector.open();
+		    socketChannel.register(selector, SelectionKey.OP_READ);
 		    //play();
 		} catch (Exception e) {
 			// TODO: handle exception

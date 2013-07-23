@@ -24,6 +24,8 @@
         </activity>
         <activity android:name="ReadyScreen"></activity>
         <activity android:name="GameScreen"></activity>
+        <service android:name = ".ServerService"></service>
+        
     </application>
 	<uses-permission android:name="android.permission.INTERNET" />
 </manifest>
