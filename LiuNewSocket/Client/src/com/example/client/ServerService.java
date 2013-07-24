@@ -38,7 +38,6 @@ public class ServerService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId){
 		Log.d(TAG, "Started running the service");
-		Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
 		
 		(new Thread(new ReceivingThread())).start();
 		(new Thread(new SendingThread())).start();

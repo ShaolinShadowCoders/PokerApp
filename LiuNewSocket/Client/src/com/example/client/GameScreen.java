@@ -17,6 +17,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.Menu;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 	public class GameScreen extends Activity {
@@ -33,6 +35,9 @@ import android.widget.TextView;
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
+	        requestWindowFeature(Window.FEATURE_NO_TITLE);
+	        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+	                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	        setContentView(R.layout.gamescreen);      
 			cardOne = (TextView) findViewById(R.id.card_one);
 			cardTwo = (TextView) findViewById(R.id.card_two);
