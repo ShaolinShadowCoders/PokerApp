@@ -23,6 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button1"
+        android:textColor="#fef500"
+        android:textColorHint="#cac300"
         android:ems="10"
         android:hint="Username" >
 
@@ -35,6 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/button1"
         android:layout_toRightOf="@+id/editText1"
+        android:textColor="#fef500"
+        android:textColorHint="#cac300"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword" />
@@ -46,6 +50,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/textView1"
         android:layout_marginBottom="10dp"
-        android:text="Button" />
+        android:text="Login" />
 
 </RelativeLayout>

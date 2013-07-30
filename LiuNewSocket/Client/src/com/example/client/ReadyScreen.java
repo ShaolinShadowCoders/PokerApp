@@ -73,7 +73,6 @@ public class ReadyScreen extends Activity {
 	        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 	                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.readyscreen);
-		textView=(TextView) findViewById(R.id.readyMsg);
 
 		handler=new Handler(){
 

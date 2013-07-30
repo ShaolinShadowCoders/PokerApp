@@ -39,9 +39,9 @@ import android.widget.TextView;
 	        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 	                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	        setContentView(R.layout.gamescreen);      
-			cardOne = (TextView) findViewById(R.id.card_one);
+/*			cardOne = (TextView) findViewById(R.id.card_one);
 			cardTwo = (TextView) findViewById(R.id.card_two);
-			turn = (TextView) findViewById(R.id.turn);
+			turn = (TextView) findViewById(R.id.turn);*/
 			//send server a message 
 			while(gameTime == false)
 				
