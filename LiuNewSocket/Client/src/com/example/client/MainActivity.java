@@ -127,7 +127,7 @@ public class MainActivity extends Activity {
 				bundle.putString("password", strps);
 				msg.setData(bundle);
 				threadHandler.sendMessage(msg);
-				
+				System.out.println("Weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 			}
 		});
 	}

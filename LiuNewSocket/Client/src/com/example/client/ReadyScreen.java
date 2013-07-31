@@ -82,9 +82,11 @@ public class ReadyScreen extends Activity {
 				if(bundle.getInt("ready") == 1){
 					//Receive info and assign to player
 					Intent j = new Intent();
+					
 					j.setClassName("com.example.client",
 							"com.example.client.GameScreen");
 					startActivity(j);
+					finish();
 				}else{
 						//Time out
 						alertMessage();	
@@ -233,11 +235,15 @@ public class ReadyScreen extends Activity {
 						if (count > 0) {  
 							receiveBuffer.flip();  
 			                message = MyMessage.byte2Message(receiveBuffer.array());  
-			                System.out.println("Receive : "+message.getb()+","+message.getUsername());
+			               
 			                Message msg=Message.obtain();
 			                Bundle bundle=new Bundle();
-			                bundle.putInt("int", message.getb());			               
-			                bundle.putInt("ready", message.getReady());
+			                
+			                if(message.getb() == 3){
+			                	 bundle.putInt("int", message.getb());			               
+					             bundle.putInt("ready", message.getReady());
+			                }else if(message.getb() == -2){}
+			                
 			                msg.setData(bundle);
 			                handler.sendMessage(msg);
 						}

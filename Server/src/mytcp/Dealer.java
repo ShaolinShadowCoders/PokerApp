@@ -22,7 +22,8 @@ ArrayList<Integer> deck;
 	public int dealCard(ArrayList<Integer> deck){
 		int card;
 		Random random = new Random();
-		int index = random.nextInt() % deck.size();
+		int index = random.nextInt(deck.size());
+		System.out.println("index is " + index + " and deckSize is " + deck.size());
 		card = deck.get(index);
 		deck.remove(index);
 		return card; 
