@@ -36,7 +36,6 @@ public class Player extends Person {
 	}
 
 	public int turn(int bet){
-		System.out.println("Select your move! \n1 - Call. \n2 - Raise. \n3 - Fold.");
 		Scanner scanner = new Scanner(System.in);
 
 		if (bet == 1){
@@ -51,6 +50,8 @@ public class Player extends Person {
 			currentBet = bet;
 			this.setTotal(this.getTotal()-bet);
 		} else {
+			System.out.println("Select your move! \n1 - Call. \n2 - Raise. \n3 - Fold.");
+
 			currentBet = bet - currentBet;
 			int choice = scanner.nextInt();
 			switch(choice){

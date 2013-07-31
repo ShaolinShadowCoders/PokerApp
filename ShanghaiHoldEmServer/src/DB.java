@@ -1,18 +1,17 @@
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-
-
 public class DB {
-	
+
 	ServerHello client;
-	public DB(ServerHello client){
+
+	public DB(ServerHello client) {
 		this.client = client;
 	}
-	String idCheck(String username) throws SQLException {
+
+	Boolean idCheck(String username, String password) throws SQLException {
 
 		Connection dbConnection = null;
 		PreparedStatement preparedStatement = null;
@@ -47,27 +46,62 @@ public class DB {
 			if (dbConnection != null) {
 				dbConnection.close();
 			}
-			return pass;
+			if (password.compareTo(pass) == 0)
+				return true;
+			else {
+				return false;
+			}
 		}
 	}
 
-public static Connection getConnection() {
-	Connection con = null;
-	try {
-		Class.forName("com.mysql.jdbc.Driver");
-		con = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/testpoker", "root", "");
-	} catch (SQLException ex) {
-		ex.printStackTrace();
-	} catch (ClassNotFoundException ex) {
-		ex.printStackTrace();
+	void blindUpdate(String username, int bigSmall) throws SQLException {
+
+		Connection dbConnection = null;
+		java.sql.PreparedStatement preparedStatement = null;
+		String updateTableSQL = "UPDATE Players SET Chips = Chips - ? "
+				+ " WHERE Username = ?";
+		int change = 0;
+		if (bigSmall == 0)
+			change = 5;
+		else if (bigSmall == 1)
+			change = 10;
+
+		try {
+			dbConnection = getConnection();
+			preparedStatement = (PreparedStatement) dbConnection
+					.prepareStatement(updateTableSQL);
+
+			preparedStatement.setInt(1, change);
+			preparedStatement.setString(2, username);
+
+			// execute update SQL statement
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			if (dbConnection != null) {
+				dbConnection.close();
+			}
+		}
 	}
-	return con;
-}
 
-
-
-
-
+	public static Connection getConnection() {
+		Connection con = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = (Connection) DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/testpoker", "root", "");
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		return con;
+	}
 
 }

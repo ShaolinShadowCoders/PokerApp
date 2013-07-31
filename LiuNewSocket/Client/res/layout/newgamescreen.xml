@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/Button03"
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
+        android:text="Call" />
+
+    <Button
+        android:id="@+id/Button02"
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/Button03"
+        android:text="Raise" />
+
+    <Button
+        android:id="@+id/Button01"
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/Button02"
+        android:layout_below="@+id/Button02"
+        android:text="Fold" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/Button01"
+        android:layout_below="@+id/Button01"
+        android:text="Quit" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Button02"
+        android:layout_alignBottom="@+id/Button02"
+        android:layout_marginLeft="37dp"
+        android:layout_toRightOf="@+id/Button02"
+        android:text="Nothing has been clicked" />
+
+</RelativeLayout>

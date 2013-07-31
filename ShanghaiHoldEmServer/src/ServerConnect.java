@@ -39,6 +39,10 @@ public class ServerConnect {
 			cArray[i] =((Login) login).validateUser(cArray[i]);
 		}
 		
+		int smallblind = 0;
+		int bigBlind = 1;
+		///////Start of a new hand/////////
+		
 		//make sure everyone joins the game
 		for(int i = 0; i<players;i++)
 			cArray[i].status= cArray[i].joinGame(); /*join game is a function where it accepts "ready"*/
@@ -51,15 +55,20 @@ public class ServerConnect {
 		//check if 
 		for(int i = 0; i<players;i++)
 			if(cArray[i].status == true)
-				
 				gameplay.add(cArray[i]); //move into a new array for the gameplay
+				
 				players = gameplay.size();
+				smallblind %= players;
+				bigBlind %= players;
 				
 				
 				
 				//send message from server to each client in gameplay array to move onto the 
+				for(int i=0; i<players;i++)
+					gameplay.get(i).sendString("Welcome");
 				//next screen with cards 
-				
+				Hand hand = new Hand(players, gameplay,smallblind,bigBlind);
+				//hand.startHand();
 				
 				////////////WHILE LOOP FOR GAMEPLAY///////////////////////////////////////////////////
 				

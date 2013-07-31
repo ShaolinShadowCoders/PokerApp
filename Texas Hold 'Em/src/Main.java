@@ -114,8 +114,8 @@ public class Main {
 						}
 						else if (newBet > bet){
 							System.out.println("Player "+players.get(flopNum).getNum()+" has raised. The new bet is now "+newBet);
-							pot = pot + newBet - bet;
 							bet = newBet;
+							pot += bet;
 							flag = 1;//new
 						} else if (newBet == 0){
 							System.out.println("Player "+players.get(flopNum).getNum()+" has folded");
@@ -188,8 +188,8 @@ public class Main {
 						}
 						else if (newBet > bet){
 							System.out.println("Player "+players.get(i).getNum()+" has raised. The new bet is now "+newBet);
-							pot = pot + newBet - bet;
 							bet = newBet;
+							pot += bet;
 							flag = 1;//new
 						} else if (newBet == 0){
 							System.out.println("Player "+players.get(i).getNum()+" has folded");
@@ -254,8 +254,8 @@ public class Main {
 						}
 						else if (newBet > bet){
 							System.out.println("Player "+players.get(i).getNum()+" has raised. The new bet is now "+newBet);
-							pot = pot + newBet - bet;
 							bet = newBet;
+							pot += bet;
 							flag = 1;//new
 						} else if (newBet == 0){
 							System.out.println("Player "+players.get(i).getNum()+" has folded");
@@ -321,8 +321,8 @@ public class Main {
 						}
 						else if (newBet > bet){
 							System.out.println("Player "+players.get(i).getNum()+" has raised. The new bet is now "+newBet);
-							pot = pot + newBet - bet;
 							bet = newBet;
+							pot += bet;
 							flag = 1;//new
 						} else if (newBet == 0){
 							System.out.println("Player "+players.get(i).getNum()+" has folded");
