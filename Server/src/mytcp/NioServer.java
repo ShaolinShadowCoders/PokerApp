@@ -93,6 +93,8 @@ public class NioServer {
 				int n = selector.select();
 				if (n == 0)
 					continue;
+				
+				
 				Set<SelectionKey> selectionKeys = selector.selectedKeys();
 				for (SelectionKey key : selectionKeys) {
 					try {

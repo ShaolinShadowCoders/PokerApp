@@ -8,9 +8,9 @@ import java.sql.SQLException;
 
 public class DB {
 
-	GamePlayer client;
+	ServerMessage client;
 
-	public DB(GamePlayer client) {
+	public DB(ServerMessage client) {
 		this.client = client;
 	}
 
