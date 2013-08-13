@@ -14,6 +14,7 @@ public class DB {
 		this.client = client;
 	}
 
+	@SuppressWarnings("finally")
 	static int idCheck(String username, String password)
 			throws SQLException {
 

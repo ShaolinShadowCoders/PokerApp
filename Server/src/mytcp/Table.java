@@ -1,6 +1,5 @@
 package mytcp;
 
-import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,6 +12,7 @@ public class Table {
 	Map<Integer, Player> clientsMap=new HashMap<Integer,Player>();   //0=<key<8
 	public boolean addplayer(Player player) {
 		//num++;
+		@SuppressWarnings("rawtypes")
 		Set keySet=clientsMap.keySet();
 		for(int i=0;i<8;i++){
 			if(!keySet.contains(i)){
@@ -24,7 +24,9 @@ public class Table {
 		return false;
 	}
 	public void deleteplayer(Player player){
+		@SuppressWarnings("rawtypes")
 		Set keySet=clientsMap.keySet();
+		@SuppressWarnings("unchecked")
 		Iterator<Integer> iterator=keySet.iterator();
 		while (iterator.hasNext()) {
 			Integer integer=iterator.next();
@@ -37,9 +39,3 @@ public class Table {
 	}
 }
 
-class Player{
-	int userid;
-	int score;
-	int tablenumber;
-	SocketChannel socketChannel;
-}
